@@ -1,0 +1,346 @@
+<?xml version="1.0"?>
+
+<robot name="rx1" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:property name="pi" value="3.1415" />
+    <xacro:property name="motor_torque" value="50.0"/>
+    <xacro:property name="motor_vec" value="15"/>
+
+    <material name="red">
+        <color rgba="1 0 0 1"/>
+    </material>
+
+    <material name="white">
+        <color rgba="1 1 1 1"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0 0 1 1"/>
+    </material>
+
+    <xacro:macro name="default_inertial" params="mass">
+        <inertial>
+            <mass value="${mass}" />
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </xacro:macro>
+
+    <link name="base_link">
+        <inertial>
+            <mass value="10.0" />
+            <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.04" iyz="0.0" izz="0.2" />
+            <!--inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1" /-->
+        </inertial>
+
+        <visual>
+            <geometry>
+                <box size="0.02 0.02 0.5" />
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.02 0.02 0.5" />
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="camera_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+        <visual>
+            <geometry>
+                <box size="0.02 0.08 0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.03 0.12 0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="base2camera_joint" type="fixed">
+        <origin xyz="0 0 0.40" rpy="0 0.5 0" />
+        <parent link="base_link" />
+        <child link="camera_link" />
+    </joint>
+
+    <link name="camera_color_optical_frame">
+        <visual>
+            <geometry>
+                <box size="0.01 0.01 0.01" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+    </link>
+    <joint name="camera2camera_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="-1.57 0 -1.57" />
+        <parent link="camera_link" />
+        <child link="camera_color_optical_frame" />
+    </joint>
+
+
+
+
+    <link name="torso_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+        <visual>
+            <geometry>
+                <box size="0.03 0.12 0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.03 0.12 0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="base2torso_joint" type="fixed">
+        <origin xyz="0 0 0.26" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="torso_link" />
+    </joint>
+
+
+    <link name="chest_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+       
+        <visual>
+            <geometry>
+                <cylinder length="0.04" radius="0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0.02"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.04" radius="0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0.02"/>
+        </collision>
+    </link>
+    <joint name="torso2chest_joint" type="fixed">
+        <origin xyz="0 -0.06 0.01" rpy="${0.25*pi} 0 0" />
+        <parent link="torso_link" />
+        <child link="chest_link" />
+    </joint>
+
+    <link name="shoul_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.04" radius="0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0.02"/>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.04" radius="0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0.02"/>
+        </collision>
+    </link>
+    <joint name="chest2shoul_joint" type="revolute">
+        <axis xyz="0 0 1" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 0.04" rpy="0 0 0" />
+        <parent link="chest_link" />
+        <child link="shoul_link" />
+    </joint>
+
+    <link name="shoulrot_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.04" radius="0.02" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} 0" xyz="0 0 0"/>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.04" radius="0.02" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="shoul2shoulrot_joint" type="revolute">
+        <axis xyz="1 0 0" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 0.04" rpy="${-0.25*pi} 0 0" />
+        <parent link="shoul_link" />
+        <child link="shoulrot_link" />
+    </joint>
+
+
+    <link name="arm_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.085" radius="0.015" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.085" radius="0.015" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="shoulrot2arm_joint" type="fixed">
+        <origin xyz="0 0 -0.0425" rpy="0 0 0" />
+        <parent link="shoulrot_link" />
+        <child link="arm_link" />
+    </joint>
+
+
+    <link name="armrot_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.085" radius="0.015" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 -0.0425"/>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.085" radius="0.015" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 -0.0425"/>
+        </collision>
+    </link>
+    <joint name="arm2armrot_joint" type="revolute">
+        <axis xyz="0 0 1" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 -0.0425" rpy="0 0 0" />
+        <parent link="arm_link" />
+        <child link="armrot_link" />
+    </joint>
+
+    <link name="elbow_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.04" radius="0.015" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} -${0.5*pi}" xyz="0 0 0"/>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.085" radius="0.015" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} -${0.5*pi}" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="armrot2elbow_joint" type="revolute">
+        <axis xyz="0 1 0" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 -0.085" rpy="0 0 0" />
+        <parent link="armrot_link" />
+        <child link="elbow_link" />
+    </joint>
+
+     <link name="forearm_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.066" radius="0.015" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.066" radius="0.015" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="elbow2forearm_joint" type="fixed">
+        <origin xyz="0 0 -0.033" rpy="0 0 0" />
+        <parent link="elbow_link" />
+        <child link="forearm_link" />
+    </joint>
+
+    <link name="forearmrot_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.066" radius="0.015" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 -0.033"/>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.066" radius="0.015" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 -0.033"/>
+        </collision>
+    </link>
+    <joint name="forearm2forearmrot_joint" type="revolute">
+        <axis xyz="0 0 1" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 -0.033" rpy="0 0 0" />
+        <parent link="forearm_link" />
+        <child link="forearmrot_link" />
+    </joint>
+
+    <link name="wrist_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.03" radius="0.015" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} 0" xyz="0 0 0"/>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.03" radius="0.01" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="forearmrot2wrist_joint" type="revolute">
+        <axis xyz="1 0 0" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 -0.066" rpy="0 0 0" />
+        <parent link="forearmrot_link" />
+        <child link="wrist_link" />
+    </joint>
+   
+    <link name="hand_link">
+        <visual>
+            <geometry>
+                <box size="0.04 0.02 0.12" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.04 0.02 0.12" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="wrist2hand_joint" type="fixed">
+        <origin xyz="0 0 -0.066" rpy="0 0 0" />
+        <parent link="wrist_link" />
+        <child link="hand_link" />
+    </joint>
+
+
+</robot>

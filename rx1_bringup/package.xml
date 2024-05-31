@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rx1_bringup</name>
+  <version>1.2.5</version>
+  <description>
+    roslaunch scripts for starting the rx1 robot
+  </description>
+  <license>MIT</license>
+  <author email="lingkangzhang@gmail.com">zlingkang</author>
+  <maintainer email="lingkangzhang@gmail.com">zlingkang</maintainer>
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>diagnostic_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <exec_depend>rx1_description</exec_depend>
+  <exec_depend>joint_state_publisher</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+</package>

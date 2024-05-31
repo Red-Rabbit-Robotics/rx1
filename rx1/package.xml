@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rx1</name>
+  <version>0.0.0</version>
+  <description>The rx1 robot package</description>
+  <maintainer email="lingkangzhang@gmail.com">zlingkang</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>rx1_description</exec_depend>
+  <exec_depend>rx1_bringup</exec_depend>
+  <exec_depend>rx1_motor</exec_depend>
+  <exec_depend>rx1_ik</exec_depend>
+  <exec_depend>rx1_teleop</exec_depend>
+  <export><metapackage/></export>
+</package>
+

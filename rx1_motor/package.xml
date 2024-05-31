@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rx1_motor</name>
+  <version>1.2.5</version>
+  <description>
+    rx1 motor hardware control
+  </description>
+  <license>MIT</license>
+  <author email="lingkangzhang@gmail.com">zlingkang</author>
+  <maintainer email="lingkangzhang@gmail.com">zlingkang</maintainer>
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>feetech_lib</depend>
+  <depend>roscpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>urdf</depend>
+  <depend>xacro</depend>
+</package>
+

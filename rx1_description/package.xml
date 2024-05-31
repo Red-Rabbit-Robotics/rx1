@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rx1_description</name>
+  <version>1.2.5</version>
+  <description>
+    3D models of the rx1 for simulation and visualization
+  </description>
+  <license>MIT</license>
+  <author email="lingkangzhang@gmail.com">zlingkang</author>
+  <maintainer email="lingkangzhang@gmail.com">zlingkang</maintainer>
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>urdf</depend>
+  <depend>xacro</depend>
+</package>
+

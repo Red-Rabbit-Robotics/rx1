@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rx1_ik</name>
+  <version>1.2.5</version>
+  <description>
+    Inverse Kinematics of the RX1 robot
+  </description>
+  <license>MIT</license>
+  <author email="lingkangzhang@gmail.com">Lingkang</author>
+  <maintainer email="lingkangzhang@gmail.com">Lingkang</maintainer>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>interactive_markers</build_depend>
+  <build_depend>tf2</build_depend>
+  <build_depend>tf2_geometry_msgs</build_depend>
+  <build_depend>tf2_msgs</build_depend>
+  <build_depend>tf2_ros</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>pluginlib</build_depend>
+  <build_depend>ik_solver_lib</build_depend>
+  <build_depend>kdl_parser</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>interactive_markers</exec_depend>
+  <exec_depend>tf2_geometry_msgs</exec_depend>
+  <exec_depend>tf2_msgs</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>tf2</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>pluginlib</exec_depend>
+  <exec_depend>ik_solver_lib</exec_depend>
+  <exec_depend>kdl_parser</exec_depend>
+</package>
+

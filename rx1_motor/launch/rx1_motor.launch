@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+
+<launch>
+  <node name="rx1_motor_node" pkg="rx1_motor" type="rx1_motor_node" output="screen" />
+</launch>
