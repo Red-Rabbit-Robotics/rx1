@@ -46,7 +46,7 @@ void Rx1Motor::jointStateCallback(const sensor_msgs::JointState::ConstPtr& msg)
     std::vector<double> joint_positions = msg->position;
 
     // Process the joint state information
-    motorCommand(joint_positions, 0, 20);
+    motorCommand(joint_positions, 0, 40);
 
     // Print joint names and positions
     /*

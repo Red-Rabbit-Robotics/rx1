@@ -180,7 +180,7 @@
     </link>
     <joint name="right_shoul2shoul_rot_joint" type="revolute">
         <axis xyz="1 0 0" />
-        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.16*pi}" velocity="${motor_vec}"/>
         <origin xyz="0 0 0.08" rpy="${-0.3333*pi} 0 0" />
         <parent link="right_shoul_link" />
         <child link="right_shoul_rot_link" />
@@ -320,7 +320,7 @@
     </link>
     <joint name="right_forearmrot2forearm_pitch_joint" type="revolute">
         <axis xyz="0 1 0" />
-        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <limit effort="${motor_torque}" lower="${-0.25*pi}" upper="${0.25*pi}" velocity="${motor_vec}"/>
         <origin xyz="0 0 -0.18" rpy="0 0 0" />
         <parent link="forearmrot_link" />
         <child link="right_forearm_pitch_link" />
@@ -343,7 +343,7 @@
     </link>
     <joint name="right_forearm_pitch2forearm_roll_joint" type="revolute">
         <axis xyz="1 0 0" />
-        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <limit effort="${motor_torque}" lower="${-0.25*pi}" upper="${0.25*pi}" velocity="${motor_vec}"/>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <parent link="right_forearm_pitch_link" />
         <child link="right_forearm_roll_link" />
