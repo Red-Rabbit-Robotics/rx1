@@ -1,0 +1,5 @@
+chain_r_end: "right_forearm_roll_link"
+eps: 0.01
+ik_timeout: 0.05
+max_angle_change: 0.6
+tracking_timeout: 1

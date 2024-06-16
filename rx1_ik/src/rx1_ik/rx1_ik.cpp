@@ -205,7 +205,8 @@ void Rx1Ik::markerRightCallback(const visualization_msgs::InteractiveMarkerFeedb
             {
                 for (int i = 0; i < result_joint_positions.rows(); ++i)
                 {
-                    prev_joint_state_msg_.position[i] = result_joint_positions(i);
+                    prev_joint_state_msg_.position[i] = prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
+                    //prev_joint_state_msg_.position[i] = result_joint_positions(i);
                 }
                 ROS_INFO("Succeed finding IK solution");
             }
@@ -353,6 +354,7 @@ void Rx1Ik::rightGripperPoseCallback(const geometry_msgs::Pose& msg)
                 for (int i = 0; i < result_joint_positions.rows(); ++i)
                 {
                     prev_joint_state_msg_.position[i] = prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
+                    //prev_joint_state_msg_.position[i] = result_joint_positions(i);
                 }
             }
             else
@@ -418,7 +420,7 @@ void Rx1Ik::update()
 
 void Rx1Ik::spin()
 {
-    ros::Rate rate(20);
+    ros::Rate rate(25);
     while(ros::ok())
     {
         spinOnce();
