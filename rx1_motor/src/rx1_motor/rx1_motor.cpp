@@ -74,4 +74,4 @@ void Rx1Motor::motorCommand(const std::vector<double> joint_angles, const int sp
     sts_servo_.SyncWritePosEx(ids, 7, pos, speeds, accs); 
 }
 
-} // namespace hrcmodel4_motor
+} // namespace rx1_motor

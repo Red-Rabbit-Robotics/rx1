@@ -35,7 +35,7 @@ private:
     //std::vector<int> sts_servo_ids_ = {0, 1, 2, 3, 4, 5};
     std::vector<int> sts_servo_ids_ = {11, 12, 13, 14, 15, 16, 17};
     std::vector<int> sts_servo_dirs_ = {-1, -1, 1, 1, 1, 1, -1};
-    std::vector<int> sts_servo_gears_ = {3, 2, 2, 3, 1, 1, 1};
+    std::vector<int> sts_servo_gears_ = {3, 3, 3, 3, 1, 1, 1};
 
     ros::Subscriber joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/joint_states", 10, &Rx1Motor::jointStateCallback, this);
 

@@ -21,24 +21,26 @@ Rx1Ik::Rx1Ik(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     try
     {
         // Retrieve parameters from the parameter server
-        std::string chain_start, chain_r_end, chain_l_end, urdf_param;
-        double timeout;
+        double ik_timeout;
         double eps;
 
-        priv_nh_.param("chain_start", chain_start, std::string("base_link"));
-        priv_nh_.param("chain_r_end", chain_r_end, std::string("right_hand_link"));
-        priv_nh_.param("chain_l_end", chain_l_end, std::string("left_hand_link"));
-        priv_nh_.param("urdf_param", urdf_param, std::string("/robot_description"));
-        priv_nh_.param("timeout", timeout, 0.005); // Default timeout
+        priv_nh_.param("chain_start", chain_start_, std::string("torso_link"));
+        priv_nh_.param("chain_r_end", chain_r_end_, std::string("right_hand_link"));
+        priv_nh_.param("chain_l_end", chain_l_end_, std::string("left_hand_link"));
+        priv_nh_.param("urdf_param", urdf_param_, std::string("/robot_description"));
+        priv_nh_.param("ik_timeout", ik_timeout, 0.005); // Default timeout
         priv_nh_.param("eps", eps, 1e-3); // Default error
+        priv_nh_.param("max_angle_change", max_angle_change_, 0.3);
+        priv_nh_.param("tracking_timeout", tracking_timeout_, 1.0);
         
         ROS_INFO("eps: %f", eps);
 
         // Create IK solver instance
         ik_loader_r_ptr_ = std::make_unique<pluginlib::ClassLoader<ik_solver_plugin::IKSolverBase>>("ik_solver_lib", "ik_solver_plugin::IKSolverBase");
         ik_solver_r_ptr_ = ik_loader_r_ptr_->createInstance("ik_solver_plugin::TracIKSolver");
-        ik_solver_r_ptr_->initialize(chain_start, chain_r_end, urdf_param, timeout, eps);
+        ik_solver_r_ptr_->initialize(chain_start_, chain_r_end_, urdf_param_, ik_timeout, eps);
 
+        last_ik_time_ = ros::Time::now().toSec() - tracking_timeout_;
         /*
         ik_loader_l_ptr_ = std::make_unique<pluginlib::ClassLoader<ik_solver_plugin::IKSolverBase>>("ik_solver_lib", "ik_solver_plugin::IKSolverBase");
         ik_solver_l_ptr_ = ik_loader_l_ptr_->createInstance("ik_solver_plugin::TracIKSolver");
@@ -55,6 +57,10 @@ Rx1Ik::Rx1Ik(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     // Publisher for joint states
     joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>("joint_states", 10);
 
+    // Initialize subscribers
+    right_gripper_pose_sub_ = nh_.subscribe("right_gripper_pose", 10, &Rx1Ik::rightGripperPoseCallback, this);
+
+    // Initialize joint states
     sensor_msgs::JointState joint_state_msg;
     joint_state_msg.header.stamp = ros::Time::now();
     joint_state_msg.name.resize(7);
@@ -147,7 +153,7 @@ void Rx1Ik::initializeInteractiveMarker()
 {
     // Create an interactive marker for the end effector
     //visualization_msgs::InteractiveMarker int_marker;
-    int_marker_r_.header.frame_id = "base_link";  
+    int_marker_r_.header.frame_id = "torso_link";  
     int_marker_r_.name = "right_end_effector";
     int_marker_r_.description = "Right End Effector Control";
 
@@ -191,7 +197,7 @@ void Rx1Ik::markerRightCallback(const visualization_msgs::InteractiveMarkerFeedb
             bool success = true;
             for (int i = 0; i < result_joint_positions.rows(); ++i)
             {
-                if (abs(prev_joint_state_msg_.position[i]-result_joint_positions(i)) > 0.3)
+                if (abs(prev_joint_state_msg_.position[i]-result_joint_positions(i)) > max_angle_change_)
                     success = false;
             }
 
@@ -320,6 +326,57 @@ void Rx1Ik::markerBaseCallback(const visualization_msgs::InteractiveMarkerFeedba
 }
 */
 
+void Rx1Ik::rightGripperPoseCallback(const geometry_msgs::Pose& msg)
+{
+    // Convert the msg pose to a KDL::Frame
+    KDL::Frame desired_pose;
+    tf2::fromMsg(msg, desired_pose);
+    
+    // Solve IK
+    KDL::JntArray result_joint_positions;
+    if (ik_solver_r_ptr_->solveIK(desired_pose, result_joint_positions))
+    {
+        bool success = true;
+        if ((ros::Time::now().toSec() - last_ik_time_) < tracking_timeout_) // if it's within tracking_timeout, then the angle change should be smaller than max_angle_change
+        {
+            for (int i = 0; i < result_joint_positions.rows(); ++i)
+            {
+                if (abs(prev_joint_state_msg_.position[i]-result_joint_positions(i)) > max_angle_change_)
+                    success = false;
+            }
+        }
+
+        if (success)
+        {
+            if ((ros::Time::now().toSec() - last_ik_time_) < tracking_timeout_)
+            {
+                for (int i = 0; i < result_joint_positions.rows(); ++i)
+                {
+                    prev_joint_state_msg_.position[i] = prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < result_joint_positions.rows(); ++i)
+                {
+                    prev_joint_state_msg_.position[i] = result_joint_positions(i);
+                }
+            }
+
+            last_ik_time_ = ros::Time::now().toSec();
+            ROS_INFO("Succeed finding IK solution");
+        }
+        else
+        {
+            ROS_INFO("Succeed finding IK solution but ditch the result to reduce shake");
+        }
+    }
+    else
+    {
+        ROS_WARN("Failed to find IK solution");
+    }
+}
+
 void Rx1Ik::spinOnce()
 {
     ros::spinOnce();
@@ -334,7 +391,7 @@ void Rx1Ik::update()
     world_to_base_tf_stamped_.header.stamp = ros::Time::now();
     tf_br_.sendTransform(world_to_base_tf_stamped_);
     geometry_msgs::PoseStamped pose;
-    if(getLinkPose("base_link", "right_hand_link", pose))
+    if(getLinkPose(chain_start_, chain_r_end_, pose))
     {
         int_marker_r_.pose = pose.pose;
         marker_server_.insert(int_marker_r_);

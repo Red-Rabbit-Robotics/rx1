@@ -22,6 +22,7 @@ public:
     void markerRightCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
     //void markerLeftCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
     //void markerBaseCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
+    void rightGripperPoseCallback(const geometry_msgs::Pose& msg);
     void spinOnce();
     void spin();
     void update();
@@ -35,7 +36,9 @@ private:
     visualization_msgs::InteractiveMarker int_marker_r_;
     //visualization_msgs::InteractiveMarker int_marker_l_;
     //visualization_msgs::InteractiveMarker int_marker_b_;
-    
+   
+    ros::Subscriber right_gripper_pose_sub_;
+
     ros::Publisher joint_state_pub_;
     std::unique_ptr<pluginlib::ClassLoader<ik_solver_plugin::IKSolverBase>> ik_loader_r_ptr_;
     boost::shared_ptr<ik_solver_plugin::IKSolverBase> ik_solver_r_ptr_;
@@ -50,6 +53,14 @@ private:
     tf2_ros::Buffer tf_buffer_;
     tf2_ros::TransformListener tf_listener_;
     tf2_ros::TransformBroadcaster tf_br_;
+
+    // Params
+    std::string chain_start_, chain_r_end_, chain_l_end_, urdf_param_;
+    double max_angle_change_;
+    double tracking_timeout_;
+
+    // Ik variables
+    double last_ik_time_;
 
     // util functions
     
