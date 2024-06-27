@@ -1,0 +1,377 @@
+<?xml version="1.0"?>
+
+<robot name="rx1" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:property name="pi" value="3.1415" />
+    <xacro:property name="motor_torque" value="50.0"/>
+    <xacro:property name="motor_vec" value="15"/>
+
+    <material name="red">
+        <color rgba="1 0 0 1"/>
+    </material>
+
+    <material name="white">
+        <color rgba="1 1 1 1"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0 0 1 1"/>
+    </material>
+
+    <xacro:macro name="default_inertial" params="mass">
+        <inertial>
+            <mass value="${mass}" />
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </xacro:macro>
+
+    <link name="base_link">
+        <inertial>
+            <mass value="10.0" />
+            <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.04" iyz="0.0" izz="0.2" />
+            <!--inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1" /-->
+        </inertial>
+
+        <visual>
+            <geometry>
+                <box size="0.02 0.02 0.5" />
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.02 0.02 0.5" />
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="camera_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+        <visual>
+            <geometry>
+                <box size="0.02 0.08 0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.03 0.12 0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="base2camera_joint" type="fixed">
+        <origin xyz="0 0 0.40" rpy="0 0.5 0" />
+        <parent link="base_link" />
+        <child link="camera_link" />
+    </joint>
+
+    <link name="camera_color_optical_frame">
+        <visual>
+            <geometry>
+                <box size="0.01 0.01 0.01" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+    </link>
+    <joint name="camera2camera_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="-1.57 0 -1.57" />
+        <parent link="camera_link" />
+        <child link="camera_color_optical_frame" />
+    </joint>
+
+
+
+
+    <link name="torso_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+        <visual>
+            <geometry>
+                <!--box size="0.03 0.12 0.02" /-->
+                <mesh filename="package://rx1_description/meshes/torso_link_v2.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.03 0.12 0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="base2torso_joint" type="fixed">
+        <origin xyz="0 0 0.26" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="torso_link" />
+    </joint>
+
+
+    <link name="right_shoul_base_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+       
+        <visual>
+            <geometry>
+                <cylinder length="0.075" radius="0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0.0375"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.075" radius="0.02" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0.0375"/>
+        </collision>
+    </link>
+    <joint name="torso2right_shoul_base_joint" type="fixed">
+        <origin xyz="0 -0.12 -0.04" rpy="${0.3333*pi} 0 0" />
+        <parent link="torso_link" />
+        <child link="right_shoul_base_link" />
+    </joint>
+
+    <link name="right_shoul_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.08" radius="0.03" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0.04"/>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.08" radius="0.03" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0.04"/>
+        </collision>
+    </link>
+    <joint name="right_shoul_base2shoul_joint" type="revolute">
+        <axis xyz="0 0 1" />
+        <limit effort="${motor_torque}" lower="${-0.8*pi}" upper="${0.8*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 0.075" rpy="0 0 0" />
+        <parent link="right_shoul_base_link" />
+        <child link="right_shoul_link" />
+    </joint>
+
+    <link name="right_shoul_rot_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.04" radius="0.03" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} 0" xyz="0 0 0"/>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.04" radius="0.03" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="right_shoul2shoul_rot_joint" type="revolute">
+        <axis xyz="1 0 0" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.16*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 0.08" rpy="${-0.3333*pi} 0 0" />
+        <parent link="right_shoul_link" />
+        <child link="right_shoul_rot_link" />
+    </joint>
+
+
+    <link name="right_upper_arm_link">
+        <visual>
+            <geometry>
+                <!--cylinder length="0.085" radius="0.015" /-->
+                <mesh filename="package://rx1_description/meshes/right_arm/right_upper_arm_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <!--cylinder length="0.085" radius="0.015" /-->
+                <mesh filename="package://rx1_description/meshes/right_arm/right_upper_arm_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="right_shoul_rot2upper_arm_joint" type="fixed">
+        <origin xyz="0 0 -0.0625" rpy="0 0 0" />
+        <parent link="right_shoul_rot_link" />
+        <child link="right_upper_arm_link" />
+    </joint>
+
+
+    <link name="right_armrot_link">
+        <visual>
+            <geometry>
+                <!--cylinder length="0.22" radius="0.03" /-->
+                <mesh filename="package://rx1_description/meshes/right_arm/right_elbow_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 -0.11"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.22" radius="0.03" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 -0.11"/>
+        </collision>
+    </link>
+    <joint name="right_arm2armrot_joint" type="revolute">
+        <axis xyz="0 0 1" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 -0.0625" rpy="0 0 0" />
+        <parent link="right_upper_arm_link" />
+        <child link="right_armrot_link" />
+    </joint>
+
+    <link name="elbow_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.08" radius="0.03" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} -${0.5*pi}" xyz="0 0 0"/>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.08" radius="0.03" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} -${0.5*pi}" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="right_armrot2elbow_joint" type="revolute">
+        <axis xyz="0 1 0" />
+        <limit effort="${motor_torque}" lower="${-0.7*pi}" upper="0" velocity="${motor_vec}"/>
+        <origin xyz="0 0 -0.22" rpy="0 0 0" />
+        <parent link="right_armrot_link" />
+        <child link="elbow_link" />
+    </joint>
+
+     <link name="forearm_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.09" radius="0.03" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.09" radius="0.03" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="elbow2forearm_joint" type="fixed">
+        <origin xyz="0 0 -0.045" rpy="0 0 0" />
+        <parent link="elbow_link" />
+        <child link="forearm_link" />
+    </joint>
+
+    <link name="forearmrot_link">
+        <visual>
+            <geometry>
+                <!--cylinder length="0.18" radius="0.015" /-->
+                <mesh filename="package://rx1_description/meshes/right_arm/right_forearm_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 -0.09"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.18" radius="0.015" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 -0.09"/>
+        </collision>
+    </link>
+    <joint name="right_forearm2forearmrot_joint" type="revolute">
+        <axis xyz="0 0 1" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 -0.045" rpy="0 0 0" />
+        <parent link="forearm_link" />
+        <child link="forearmrot_link" />
+    </joint>
+
+    <link name="right_forearm_pitch_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.03" radius="0.015" />
+            </geometry>
+            <origin rpy="${0.5*pi} 0 0" xyz="0 0 0"/>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.03" radius="0.01" />
+            </geometry>
+            <origin rpy="${0.5*pi} 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="right_forearmrot2forearm_pitch_joint" type="revolute">
+        <axis xyz="0 1 0" />
+        <limit effort="${motor_torque}" lower="${-0.25*pi}" upper="${0.25*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 -0.18" rpy="0 0 0" />
+        <parent link="forearmrot_link" />
+        <child link="right_forearm_pitch_link" />
+    </joint>
+
+    <link name="right_forearm_roll_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.03" radius="0.015" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} 0" xyz="0 0 0"/>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.03" radius="0.01" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="right_forearm_pitch2forearm_roll_joint" type="revolute">
+        <axis xyz="1 0 0" />
+        <limit effort="${motor_torque}" lower="${-0.25*pi}" upper="${0.25*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="right_forearm_pitch_link" />
+        <child link="right_forearm_roll_link" />
+    </joint>
+
+
+
+    <link name="right_hand_link">
+        <visual>
+            <geometry>
+                <!--box size="0.04 0.02 0.12" /-->
+                <mesh filename="package://rx1_description/meshes/right_arm/right_hand_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.04 0.02 0.12" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="right_forearm_roll2hand_joint" type="fixed">
+        <origin xyz="0 0 -0.1" rpy="0 0 0" />
+        <parent link="right_forearm_roll_link" />
+        <child link="right_hand_link" />
+    </joint>
+
+
+</robot>
