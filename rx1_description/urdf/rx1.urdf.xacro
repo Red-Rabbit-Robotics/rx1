@@ -33,17 +33,20 @@
 
         <visual>
             <geometry>
-                <box size="0.02 0.02 0.5" />
+                <!--box size="0.02 0.02 0.5" /-->
+                <mesh filename="package://rx1_description/meshes/base_link.stl"/>
             </geometry>
             <material name="white"/>
         </visual>
         <collision>
             <geometry>
-                <box size="0.02 0.02 0.5" />
+                <!--box size="0.02 0.02 0.5" /-->
+                <mesh filename="package://rx1_description/meshes/base_link.stl"/>
             </geometry>
         </collision>
     </link>
 
+<!--
     <link name="camera_link">
         <inertial>
             <mass value="0.05" />
@@ -83,10 +86,78 @@
         <parent link="camera_link" />
         <child link="camera_color_optical_frame" />
     </joint>
+-->
 
+    <!--                            TORSO START                         -->
+    <link name="torso_yaw_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/torso_yaw_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/torso_yaw_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="base2torso_yaw_joint" type="revolute">
+        <axis xyz="0 0 1" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 0.5825" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="torso_yaw_link" />
+    </joint>
 
+    <link name="torso_pitch_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.03" radius="0.015" />
+            </geometry>
+            <origin rpy="${0.5*pi} 0 0" xyz="0 0 0"/>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.03" radius="0.01" />
+            </geometry>
+            <origin rpy="${0.5*pi} 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="torso_yaw2pitch_joint" type="revolute">
+        <axis xyz="0 1 0" />
+        <limit effort="${motor_torque}" lower="${-0.25*pi}" upper="${0.25*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 0.15" rpy="0 0 0" />
+        <parent link="torso_yaw_link" />
+        <child link="torso_pitch_link" />
+    </joint>
 
-
+    <link name="torso_roll_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.03" radius="0.015" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} 0" xyz="0 0 0"/>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="0.03" radius="0.01" />
+            </geometry>
+            <origin rpy="0 ${0.5*pi} 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="torso_pitch2roll_joint" type="revolute">
+        <axis xyz="1 0 0" />
+        <limit effort="${motor_torque}" lower="${-0.25*pi}" upper="${0.25*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="torso_pitch_link" />
+        <child link="torso_roll_link" />
+    </joint>
+    
     <link name="torso_link">
         <inertial>
             <mass value="0.05" />
@@ -95,25 +166,191 @@
         <visual>
             <geometry>
                 <!--box size="0.03 0.12 0.02" /-->
-                <mesh filename="package://rx1_description/meshes/torso_link_v2.stl"/>
+                <mesh filename="package://rx1_description/meshes/torso_link.stl"/>
             </geometry>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <material name="white"/>
         </visual>
         <collision>
             <geometry>
-                <box size="0.03 0.12 0.02" />
+                <!--box size="0.03 0.12 0.02" /-->
+                <mesh filename="package://rx1_description/meshes/torso_link.stl"/>
             </geometry>
             <origin rpy="0 0 0" xyz="0 0 0"/>
         </collision>
     </link>
-    <joint name="base2torso_joint" type="fixed">
-        <origin xyz="0 0 0.26" rpy="0 0 0" />
-        <parent link="base_link" />
+    <joint name="torso_roll2torso_joint" type="fixed">
+        <origin xyz="0 0 0.08" rpy="0 0 0" />
+        <parent link="torso_roll_link" />
         <child link="torso_link" />
     </joint>
+    <!--                            TORSO END                         -->
+
+    <!--                            HEAD START                        -->
+    <link name="head_base_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+        <visual>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/head_base_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/head_base_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="torso2head_base_joint" type="fixed">
+        <origin xyz="0 0 0.21" rpy="0 0 0" />
+        <parent link="torso_link" />
+        <child link="head_base_link" />
+    </joint>
+
+    <link name="neck_yaw_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+        <visual>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/neck_yaw_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/neck_yaw_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="head_base2neck_yaw_joint" type="revolute">
+        <axis xyz="0 0 1" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="head_base_link" />
+        <child link="neck_yaw_link" />
+    </joint>
+
+    <link name="neck_pitch_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+        <visual>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/neck_pitch_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/neck_pitch_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="neck_yaw2pitch_joint" type="revolute">
+        <axis xyz="0 1 0" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0 0.035" rpy="0 0 0" />
+        <parent link="neck_yaw_link" />
+        <child link="neck_pitch_link" />
+    </joint>
+
+    <link name="head_depth_cam_mount_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+        <visual>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/head_depth_cam_mount_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/head_depth_cam_mount_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="neck_pitch2head_depth_cam_mount_joint" type="revolute">
+        <axis xyz="1 0 0" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="-0.01 0 0.1" rpy="0 0 0" />
+        <parent link="neck_pitch_link" />
+        <child link="head_depth_cam_mount_link" />
+    </joint>
+
+    <link name="right_ear_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+        <visual>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/right_ear_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/right_ear_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="head_depth_cam_mount2right_ear_joint" type="revolute">
+        <axis xyz="0 1 0" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 -0.065 0.045" rpy="0 0 0" />
+        <parent link="head_depth_cam_mount_link" />
+        <child link="right_ear_link" />
+    </joint>
+
+    <link name="left_ear_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+        <visual>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/left_ear_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://rx1_description/meshes/head/left_ear_link.stl"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="head_depth_cam_mount2left_ear_joint" type="revolute">
+        <axis xyz="0 1 0" />
+        <limit effort="${motor_torque}" lower="${-0.5*pi}" upper="${0.5*pi}" velocity="${motor_vec}"/>
+        <origin xyz="0 0.065 0.045" rpy="0 0 0" />
+        <parent link="head_depth_cam_mount_link" />
+        <child link="left_ear_link" />
+    </joint>
+
+    <!--                            HEAD END                           -->
 
 
+    <!--                            ARM START                          -->
     <xacro:macro name="arm" params="prefix side">
         <link name="${prefix}_shoul_base_link">
             <inertial>
@@ -136,7 +373,7 @@
             </collision>
         </link>
         <joint name="torso2${prefix}_shoul_base_joint" type="fixed">
-            <origin xyz="0 ${-0.12*side} -0.04" rpy="${0.3333*pi*side} 0 0" />
+            <origin xyz="0 ${-0.12*side} 0.16" rpy="${0.3333*pi*side} 0 0" />
             <parent link="torso_link" />
             <child link="${prefix}_shoul_base_link" />
         </joint>
@@ -356,8 +593,6 @@
             <child link="${prefix}_forearm_roll_link" />
         </joint>
 
-
-
         <link name="${prefix}_hand_link">
             <visual>
                 <geometry>
@@ -384,5 +619,7 @@
 
     <xacro:arm prefix="right" side="1" />
     <xacro:arm prefix="left" side="-1" />
+
+    <!--                            ARM END                             -->
 
 </robot>

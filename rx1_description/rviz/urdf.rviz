@@ -8,7 +8,6 @@ Panels:
         - /Status1
         - /Grid1
         - /RobotModel1
-        - /RobotModel1/Status1
         - /TF1
         - /TF1/Frames1
       Splitter Ratio: 0.5
@@ -56,7 +55,7 @@ Visualization Manager:
       Plane Cell Count: 1000
       Reference Frame: <Fixed Frame>
       Value: true
-    - Alpha: 0.5
+    - Alpha: 0.699999988079071
       Class: rviz/RobotModel
       Collision Enabled: false
       Enabled: true
@@ -71,12 +70,12 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        camera_color_optical_frame:
+        head_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        camera_link:
+        head_depth_cam_mount_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -135,6 +134,17 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+          Value: true
+        neck_pitch_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        neck_yaw_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         right_armrot_link:
           Alpha: 1
           Show Axes: false
@@ -191,6 +201,21 @@ Visualization Manager:
           Show Trail: false
           Value: true
         torso_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        torso_pitch_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        torso_roll_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        torso_yaw_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -210,9 +235,9 @@ Visualization Manager:
         All Enabled: true
         base_link:
           Value: true
-        camera_color_optical_frame:
+        head_base_link:
           Value: true
-        camera_link:
+        head_depth_cam_mount_link:
           Value: true
         left_armrot_link:
           Value: true
@@ -235,6 +260,10 @@ Visualization Manager:
         left_shoul_rot_link:
           Value: true
         left_upper_arm_link:
+          Value: true
+        neck_pitch_link:
+          Value: true
+        neck_yaw_link:
           Value: true
         right_armrot_link:
           Value: true
@@ -260,6 +289,12 @@ Visualization Manager:
           Value: true
         torso_link:
           Value: true
+        torso_pitch_link:
+          Value: true
+        torso_roll_link:
+          Value: true
+        torso_yaw_link:
+          Value: true
       Marker Alpha: 1
       Marker Scale: 0.30000001192092896
       Name: TF
@@ -268,34 +303,39 @@ Visualization Manager:
       Show Names: true
       Tree:
         base_link:
-          camera_link:
-            camera_color_optical_frame:
-              {}
-          torso_link:
-            left_shoul_base_link:
-              left_shoul_link:
-                left_shoul_rot_link:
-                  left_upper_arm_link:
-                    left_armrot_link:
-                      left_elbow_link:
-                        left_forearm_link:
-                          left_forearmrot_link:
-                            left_forearm_pitch_link:
-                              left_forearm_roll_link:
-                                left_hand_link:
-                                  {}
-            right_shoul_base_link:
-              right_shoul_link:
-                right_shoul_rot_link:
-                  right_upper_arm_link:
-                    right_armrot_link:
-                      right_elbow_link:
-                        right_forearm_link:
-                          right_forearmrot_link:
-                            right_forearm_pitch_link:
-                              right_forearm_roll_link:
-                                right_hand_link:
-                                  {}
+          torso_yaw_link:
+            torso_pitch_link:
+              torso_roll_link:
+                torso_link:
+                  head_base_link:
+                    neck_yaw_link:
+                      neck_pitch_link:
+                        head_depth_cam_mount_link:
+                          {}
+                  left_shoul_base_link:
+                    left_shoul_link:
+                      left_shoul_rot_link:
+                        left_upper_arm_link:
+                          left_armrot_link:
+                            left_elbow_link:
+                              left_forearm_link:
+                                left_forearmrot_link:
+                                  left_forearm_pitch_link:
+                                    left_forearm_roll_link:
+                                      left_hand_link:
+                                        {}
+                  right_shoul_base_link:
+                    right_shoul_link:
+                      right_shoul_rot_link:
+                        right_upper_arm_link:
+                          right_armrot_link:
+                            right_elbow_link:
+                              right_forearm_link:
+                                right_forearmrot_link:
+                                  right_forearm_pitch_link:
+                                    right_forearm_roll_link:
+                                      right_hand_link:
+                                        {}
       Update Interval: 0
       Value: true
     - Class: rviz/InteractiveMarkers
@@ -347,7 +387,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.3604516983032227
+      Distance: 1.1799578666687012
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -355,17 +395,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.09976459294557571
-        Y: 0.20449475944042206
-        Z: 0.0033568507060408592
+        X: -0.01840236596763134
+        Y: 0.20236442983150482
+        Z: 0.7976603507995605
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.12539850175380707
+      Pitch: 0.41539841890335083
       Target Frame: <Fixed Frame>
-      Yaw: 0.4353797435760498
+      Yaw: 0.39537903666496277
     Saved: ~
 Window Geometry:
   Displays:
