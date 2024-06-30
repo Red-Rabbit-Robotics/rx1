@@ -293,6 +293,31 @@
         <child link="head_depth_cam_mount_link" />
     </joint>
 
+    <link name="camera_link">
+        <inertial>
+            <mass value="0.05" />
+            <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
+        </inertial>
+        <visual>
+            <geometry>
+                <box size="0.01 0.01 0.01" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.01 0.01 0.01" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="head_depth_cam_mount2camera_joint" type="fixed">
+        <origin xyz="0.05 0 0.03" rpy="0 0 0" />
+        <parent link="head_depth_cam_mount_link" />
+        <child link="camera_link" />
+    </joint>
+
     <link name="right_ear_link">
         <inertial>
             <mass value="0.05" />

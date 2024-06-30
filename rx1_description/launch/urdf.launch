@@ -9,7 +9,18 @@
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
   <param name="use_gui" value="$(arg gui)"/>
 
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="joint_state_aggregator" pkg="joint_state_publisher" type="joint_state_publisher" output="screen">
+    <!-- Remap the input topics to the topics you want to aggregate -->
+    <remap from="/joint_states" to="/aggregated_joint_states" />
+    <rosparam param="source_list">['/left_arm_joint_states', '/right_arm_joint_states', '/torso_joint_states', '/head_joint_states'] </rosparam>
+    <!--param name="source_list" value="['/left_arm_joint_states', '/right_arm_joint_states', '/torso_joint_states', '/head_joint_states']" /-->
+  </node>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen">
+    <param name="publish_frequency" value="50.0" />
+    <remap from="/joint_states" to="/aggregated_joint_states" />
+  </node>
+
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 
 </launch>
