@@ -435,7 +435,7 @@ void Rx1Ik::leftGripperPoseCallback(const geometry_msgs::Pose& msg)
     
     // Solve IK
     KDL::JntArray result_joint_positions;
-    if (ik_solver_r_ptr_->solveIK(desired_pose, result_joint_positions))
+    if (ik_solver_l_ptr_->solveIK(desired_pose, result_joint_positions))
     {
         bool success = true;
         if ((ros::Time::now().toSec() - left_last_ik_time_) < tracking_timeout_) // if it's within tracking_timeout, then the angle change should be smaller than max_angle_change
@@ -521,7 +521,7 @@ void Rx1Ik::update()
 
 void Rx1Ik::spin()
 {
-    ros::Rate rate(25);
+    ros::Rate rate(10);
     while(ros::ok())
     {
         spinOnce();
