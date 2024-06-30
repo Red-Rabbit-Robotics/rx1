@@ -20,9 +20,10 @@ public:
     Rx1Ik(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
     void initializeInteractiveMarker();
     void markerRightCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
-    //void markerLeftCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
+    void markerLeftCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
     //void markerBaseCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
     void rightGripperPoseCallback(const geometry_msgs::Pose& msg);
+    void leftGripperPoseCallback(const geometry_msgs::Pose& msg);
     void spinOnce();
     void spin();
     void update();
@@ -34,19 +35,23 @@ private:
  
     interactive_markers::InteractiveMarkerServer marker_server_;
     visualization_msgs::InteractiveMarker int_marker_r_;
-    //visualization_msgs::InteractiveMarker int_marker_l_;
+    visualization_msgs::InteractiveMarker int_marker_l_;
     //visualization_msgs::InteractiveMarker int_marker_b_;
    
     ros::Subscriber right_gripper_pose_sub_;
+    ros::Subscriber left_gripper_pose_sub_;
 
-    ros::Publisher joint_state_pub_;
+    ros::Publisher right_joint_state_pub_;
+    ros::Publisher left_joint_state_pub_;
+    
     std::unique_ptr<pluginlib::ClassLoader<ik_solver_plugin::IKSolverBase>> ik_loader_r_ptr_;
     boost::shared_ptr<ik_solver_plugin::IKSolverBase> ik_solver_r_ptr_;
 
-    //std::unique_ptr<pluginlib::ClassLoader<ik_solver_plugin::IKSolverBase>> ik_loader_l_ptr_;
-    //boost::shared_ptr<ik_solver_plugin::IKSolverBase> ik_solver_l_ptr_;
+    std::unique_ptr<pluginlib::ClassLoader<ik_solver_plugin::IKSolverBase>> ik_loader_l_ptr_;
+    boost::shared_ptr<ik_solver_plugin::IKSolverBase> ik_solver_l_ptr_;
 
-    sensor_msgs::JointState prev_joint_state_msg_;
+    sensor_msgs::JointState right_prev_joint_state_msg_;
+    sensor_msgs::JointState left_prev_joint_state_msg_;
 
     geometry_msgs::TransformStamped world_to_base_tf_stamped_;
 
@@ -60,7 +65,8 @@ private:
     double tracking_timeout_;
 
     // Ik variables
-    double last_ik_time_;
+    double right_last_ik_time_;
+    double left_last_ik_time_;
 
     // util functions
     

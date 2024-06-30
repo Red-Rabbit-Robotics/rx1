@@ -397,9 +397,9 @@
                 <origin rpy="0 0 0" xyz="0 0 0.0375"/>
             </collision>
         </link>
-        <joint name="torso2${prefix}_shoul_base_joint" type="fixed">
-            <origin xyz="0 ${-0.12*side} 0.16" rpy="${0.3333*pi*side} 0 0" />
-            <parent link="torso_link" />
+        <joint name="head_base2${prefix}_shoul_base_joint" type="fixed">
+            <origin xyz="0 ${-0.12*side} -0.05" rpy="${0.3333*pi*side} 0 0" />
+            <parent link="head_base_link" />
             <child link="${prefix}_shoul_base_link" />
         </joint>
 

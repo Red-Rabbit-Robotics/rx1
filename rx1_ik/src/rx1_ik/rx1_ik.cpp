@@ -24,7 +24,7 @@ Rx1Ik::Rx1Ik(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
         double ik_timeout;
         double eps;
 
-        priv_nh_.param("chain_start", chain_start_, std::string("torso_link"));
+        priv_nh_.param("chain_start", chain_start_, std::string("head_base_link"));
         priv_nh_.param("chain_r_end", chain_r_end_, std::string("right_hand_link"));
         priv_nh_.param("chain_l_end", chain_l_end_, std::string("left_hand_link"));
         priv_nh_.param("urdf_param", urdf_param_, std::string("/robot_description"));
@@ -40,12 +40,14 @@ Rx1Ik::Rx1Ik(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
         ik_solver_r_ptr_ = ik_loader_r_ptr_->createInstance("ik_solver_plugin::TracIKSolver");
         ik_solver_r_ptr_->initialize(chain_start_, chain_r_end_, urdf_param_, ik_timeout, eps);
 
-        last_ik_time_ = ros::Time::now().toSec() - tracking_timeout_;
-        /*
+        right_last_ik_time_ = ros::Time::now().toSec() - tracking_timeout_;
+        
         ik_loader_l_ptr_ = std::make_unique<pluginlib::ClassLoader<ik_solver_plugin::IKSolverBase>>("ik_solver_lib", "ik_solver_plugin::IKSolverBase");
         ik_solver_l_ptr_ = ik_loader_l_ptr_->createInstance("ik_solver_plugin::TracIKSolver");
-        ik_solver_l_ptr_->initialize(chain_start, chain_l_end, urdf_param, timeout, eps);
-        */
+        ik_solver_l_ptr_->initialize(chain_start_, chain_l_end_, urdf_param_, ik_timeout, eps);
+        
+        left_last_ik_time_ = ros::Time::now().toSec() - tracking_timeout_;
+        
         ROS_INFO("TracIKSolver plugin loaded and initialized successfully.");
     }
     catch (const pluginlib::PluginlibException& ex)
@@ -55,26 +57,55 @@ Rx1Ik::Rx1Ik(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     }
 
     // Publisher for joint states
-    joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>("joint_states", 10);
+    left_joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>("right_arm_joint_states", 10);
+    right_joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>("left_arm_joint_states", 10);
 
     // Initialize subscribers
     right_gripper_pose_sub_ = nh_.subscribe("right_gripper_pose", 10, &Rx1Ik::rightGripperPoseCallback, this);
+    left_gripper_pose_sub_ = nh_.subscribe("right_gripper_pose", 10, &Rx1Ik::leftGripperPoseCallback, this);
 
     // Initialize joint states
-    sensor_msgs::JointState joint_state_msg;
-    joint_state_msg.header.stamp = ros::Time::now();
-    joint_state_msg.name.resize(7);
-    joint_state_msg.position.resize(7);
-    std::vector<std::string> joint_name = {"right_shoul_base2shoul_joint", "right_shoul2shoul_rot_joint", "right_arm2armrot_joint", "right_armrot2elbow_joint", "right_forearm2forearmrot_joint", 
-                                           "right_forearmrot2forearm_pitch_joint", "right_forearm_pitch2forearm_roll_joint"};
+    sensor_msgs::JointState right_joint_state_msg;
+    right_joint_state_msg.header.stamp = ros::Time::now();
+    right_joint_state_msg.name.resize(7);
+    right_joint_state_msg.position.resize(7);
+    std::vector<std::string> right_joint_name = {"right_shoul_base2shoul_joint",
+                                                 "right_shoul2shoul_rot_joint", 
+                                                 "right_arm2armrot_joint", 
+                                                 "right_armrot2elbow_joint", 
+                                                 "right_forearm2forearmrot_joint", 
+                                                 "right_forearmrot2forearm_pitch_joint",
+                                                 "right_forearm_pitch2forearm_roll_joint"};
     for (int i = 0; i < 7; ++i)
     {
-        joint_state_msg.position[i] = 0;
-        joint_state_msg.name[i] = joint_name[i];
+        right_joint_state_msg.position[i] = 0;
+        right_joint_state_msg.name[i] = right_joint_name[i];
     }
-    joint_state_msg.position[3] = -1.57;
-    joint_state_pub_.publish(joint_state_msg);
-    prev_joint_state_msg_ = joint_state_msg;
+    right_joint_state_msg.position[3] = -1.57;
+    right_joint_state_pub_.publish(right_joint_state_msg);
+    right_prev_joint_state_msg_ = right_joint_state_msg;
+    
+
+    sensor_msgs::JointState left_joint_state_msg;
+    left_joint_state_msg.header.stamp = ros::Time::now();
+    left_joint_state_msg.name.resize(7);
+    left_joint_state_msg.position.resize(7);
+    std::vector<std::string> left_joint_name = {"left_shoul_base2shoul_joint",
+                                                "left_shoul2shoul_rot_joint", 
+                                                "left_arm2armrot_joint", 
+                                                "left_armrot2elbow_joint", 
+                                                "left_forearm2forearmrot_joint", 
+                                                "left_forearmrot2forearm_pitch_joint",
+                                                "left_forearm_pitch2forearm_roll_joint"};
+    for (int i = 0; i < 7; ++i)
+    {
+        left_joint_state_msg.position[i] = 0;
+        left_joint_state_msg.name[i] = left_joint_name[i];
+    }
+    left_joint_state_msg.position[3] = -1.57;
+    left_joint_state_pub_.publish(left_joint_state_msg);
+    left_prev_joint_state_msg_ = left_joint_state_msg;
+
     ROS_INFO("Joints initialized");
 
     // Initialize floating joint
@@ -83,7 +114,7 @@ Rx1Ik::Rx1Ik(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     world_to_base_tf_stamped_.child_frame_id = "base_link";
     world_to_base_tf_stamped_.transform.translation.x = 0.0;
     world_to_base_tf_stamped_.transform.translation.y = 0.0;
-    world_to_base_tf_stamped_.transform.translation.z = 0.5;
+    world_to_base_tf_stamped_.transform.translation.z = 0.0;
     world_to_base_tf_stamped_.transform.rotation.x = 0.0;
     world_to_base_tf_stamped_.transform.rotation.y = 0.0;
     world_to_base_tf_stamped_.transform.rotation.z = 0.0;
@@ -153,15 +184,16 @@ void Rx1Ik::initializeInteractiveMarker()
 {
     // Create an interactive marker for the end effector
     //visualization_msgs::InteractiveMarker int_marker;
-    int_marker_r_.header.frame_id = "torso_link";  
+    int_marker_r_.header.frame_id = chain_start_; //"torso_link";  
     int_marker_r_.name = "right_end_effector";
     int_marker_r_.description = "Right End Effector Control";
 
-    /*
-    int_marker_l_.header.frame_id = "base";
+    
+    int_marker_l_.header.frame_id = chain_start_;
     int_marker_l_.name = "left_end_effector";
     int_marker_l_.description = "Left End Effector Control";
 
+    /*
     int_marker_b_.header.frame_id = "map";
     int_marker_b_.name = "base_end_effector";
     int_marker_b_.description = "Base End Effector Control";
@@ -169,13 +201,13 @@ void Rx1Ik::initializeInteractiveMarker()
 
     // Create a 6-DOF control which allows moving and rotating along all axes
     make6DofMarker(int_marker_r_);
-    //make6DofMarker(int_marker_l_);
+    make6DofMarker(int_marker_l_);
     //make6DofMarker(int_marker_b_);
 
     // Add the interactive marker to our collection &
     // tell the server to call processFeedback() when feedback arrives for it
     marker_server_.insert(int_marker_r_, boost::bind(&Rx1Ik::markerRightCallback, this, _1));
-    //marker_server_.insert(int_marker_l_, boost::bind(&Rx1Ik::markerLeftCallback, this, _1));
+    marker_server_.insert(int_marker_l_, boost::bind(&Rx1Ik::markerLeftCallback, this, _1));
     //marker_server_.insert(int_marker_b_, boost::bind(&Rx1Ik::markerBaseCallback, this, _1));
 
     // 'commit' changes and send to all clients
@@ -197,7 +229,7 @@ void Rx1Ik::markerRightCallback(const visualization_msgs::InteractiveMarkerFeedb
             bool success = true;
             for (int i = 0; i < result_joint_positions.rows(); ++i)
             {
-                if (abs(prev_joint_state_msg_.position[i]-result_joint_positions(i)) > max_angle_change_)
+                if (abs(right_prev_joint_state_msg_.position[i]-result_joint_positions(i)) > max_angle_change_)
                     success = false;
             }
 
@@ -205,24 +237,23 @@ void Rx1Ik::markerRightCallback(const visualization_msgs::InteractiveMarkerFeedb
             {
                 for (int i = 0; i < result_joint_positions.rows(); ++i)
                 {
-                    prev_joint_state_msg_.position[i] = prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
+                    right_prev_joint_state_msg_.position[i] = right_prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
                     //prev_joint_state_msg_.position[i] = result_joint_positions(i);
                 }
-                ROS_INFO("Succeed finding IK solution");
+                ROS_INFO("Succeed finding right arm IK solution");
             }
             else
             {
-                ROS_INFO("Succeed finding IK solution but ditch the result to reduce shake");
+                ROS_INFO("Succeed finding right arm IK solution but ditch the result to reduce shake");
             }
         }
         else
         {
-            ROS_WARN("Failed to find IK solution");
+            ROS_WARN("Failed to find right arm IK solution");
         }
     }
 }
 
-/*
 void Rx1Ik::markerLeftCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback)
 {
     if (feedback->event_type == visualization_msgs::InteractiveMarkerFeedback::POSE_UPDATE)
@@ -235,19 +266,36 @@ void Rx1Ik::markerLeftCallback(const visualization_msgs::InteractiveMarkerFeedba
         KDL::JntArray result_joint_positions;
         if (ik_solver_l_ptr_->solveIK(desired_pose, result_joint_positions))
         {
+            bool success = true;
             for (int i = 0; i < result_joint_positions.rows(); ++i)
             {
-                prev_joint_state_msg_.position[i+6] = result_joint_positions(i);
+                if (abs(left_prev_joint_state_msg_.position[i]-result_joint_positions(i)) > max_angle_change_)
+                    success = false;
             }
-            ROS_INFO("Suceed finding IK solution");
+
+            if (success)
+            {
+                for (int i = 0; i < result_joint_positions.rows(); ++i)
+                {
+                    left_prev_joint_state_msg_.position[i] = left_prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
+                    //prev_joint_state_msg_.position[i] = result_joint_positions(i);
+                }
+                ROS_INFO("Succeed finding left arm IK solution");
+            }
+            else
+            {
+                ROS_INFO("Succeed finding left arm IK solution but ditch the result to reduce shake");
+            }
         }
         else
         {
-            ROS_WARN("Failed to find IK solution");
+            ROS_WARN("Failed to find left arm IK solution");
         }
     }
+
 }
 
+/*
 void Rx1Ik::markerBaseCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback)
 {
     ROS_INFO("Marker base call back");
@@ -338,22 +386,22 @@ void Rx1Ik::rightGripperPoseCallback(const geometry_msgs::Pose& msg)
     if (ik_solver_r_ptr_->solveIK(desired_pose, result_joint_positions))
     {
         bool success = true;
-        if ((ros::Time::now().toSec() - last_ik_time_) < tracking_timeout_) // if it's within tracking_timeout, then the angle change should be smaller than max_angle_change
+        if ((ros::Time::now().toSec() - right_last_ik_time_) < tracking_timeout_) // if it's within tracking_timeout, then the angle change should be smaller than max_angle_change
         {
             for (int i = 0; i < result_joint_positions.rows(); ++i)
             {
-                if (abs(prev_joint_state_msg_.position[i]-result_joint_positions(i)) > max_angle_change_)
+                if (abs(right_prev_joint_state_msg_.position[i]-result_joint_positions(i)) > max_angle_change_)
                     success = false;
             }
         }
 
         if (success)
         {
-            if ((ros::Time::now().toSec() - last_ik_time_) < tracking_timeout_)
+            if ((ros::Time::now().toSec() - right_last_ik_time_) < tracking_timeout_)
             {
                 for (int i = 0; i < result_joint_positions.rows(); ++i)
                 {
-                    prev_joint_state_msg_.position[i] = prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
+                    right_prev_joint_state_msg_.position[i] = right_prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
                     //prev_joint_state_msg_.position[i] = result_joint_positions(i);
                 }
             }
@@ -361,24 +409,75 @@ void Rx1Ik::rightGripperPoseCallback(const geometry_msgs::Pose& msg)
             {
                 for (int i = 0; i < result_joint_positions.rows(); ++i)
                 {
-                    prev_joint_state_msg_.position[i] = result_joint_positions(i);
+                    right_prev_joint_state_msg_.position[i] = result_joint_positions(i);
                 }
             }
 
-            last_ik_time_ = ros::Time::now().toSec();
-            ROS_INFO("Succeed finding IK solution");
+            right_last_ik_time_ = ros::Time::now().toSec();
+            ROS_INFO("Succeed finding right IK solution");
         }
         else
         {
-            ROS_INFO("Succeed finding IK solution but ditch the result to reduce shake");
+            ROS_INFO("Succeed finding right IK solution but ditch the result to reduce shake");
         }
     }
     else
     {
-        ROS_WARN("Failed to find IK solution");
+        ROS_WARN("Failed to find right IK solution");
     }
 }
 
+void Rx1Ik::leftGripperPoseCallback(const geometry_msgs::Pose& msg)
+{
+    // Convert the msg pose to a KDL::Frame
+    KDL::Frame desired_pose;
+    tf2::fromMsg(msg, desired_pose);
+    
+    // Solve IK
+    KDL::JntArray result_joint_positions;
+    if (ik_solver_r_ptr_->solveIK(desired_pose, result_joint_positions))
+    {
+        bool success = true;
+        if ((ros::Time::now().toSec() - left_last_ik_time_) < tracking_timeout_) // if it's within tracking_timeout, then the angle change should be smaller than max_angle_change
+        {
+            for (int i = 0; i < result_joint_positions.rows(); ++i)
+            {
+                if (abs(left_prev_joint_state_msg_.position[i]-result_joint_positions(i)) > max_angle_change_)
+                    success = false;
+            }
+        }
+
+        if (success)
+        {
+            if ((ros::Time::now().toSec() - left_last_ik_time_) < tracking_timeout_)
+            {
+                for (int i = 0; i < result_joint_positions.rows(); ++i)
+                {
+                    left_prev_joint_state_msg_.position[i] = left_prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
+                    //prev_joint_state_msg_.position[i] = result_joint_positions(i);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < result_joint_positions.rows(); ++i)
+                {
+                    left_prev_joint_state_msg_.position[i] = result_joint_positions(i);
+                }
+            }
+
+            left_last_ik_time_ = ros::Time::now().toSec();
+            ROS_INFO("Succeed finding left IK solution");
+        }
+        else
+        {
+            ROS_INFO("Succeed finding left IK solution but ditch the result to reduce shake");
+        }
+    }
+    else
+    {
+        ROS_WARN("Failed to find left IK solution");
+    }
+}
 void Rx1Ik::spinOnce()
 {
     ros::spinOnce();
@@ -387,9 +486,11 @@ void Rx1Ik::spinOnce()
 
 void Rx1Ik::update()
 {
-    prev_joint_state_msg_.header.stamp = ros::Time::now();
-    joint_state_pub_.publish(prev_joint_state_msg_);
-   
+    right_prev_joint_state_msg_.header.stamp = ros::Time::now();
+    right_joint_state_pub_.publish(right_prev_joint_state_msg_);
+    left_prev_joint_state_msg_.header.stamp = ros::Time::now();
+    left_joint_state_pub_.publish(left_prev_joint_state_msg_);
+  
     world_to_base_tf_stamped_.header.stamp = ros::Time::now();
     tf_br_.sendTransform(world_to_base_tf_stamped_);
     geometry_msgs::PoseStamped pose;
@@ -400,14 +501,14 @@ void Rx1Ik::update()
         marker_server_.applyChanges();
         ROS_INFO("Marker right pose updated");
     }
-    /*
-    if(getLinkPose("base", "l_tipLink", pose))
+    if(getLinkPose(chain_start_, chain_l_end_, pose))
     {
         int_marker_l_.pose = pose.pose;
         marker_server_.insert(int_marker_l_);
         marker_server_.applyChanges();
         ROS_INFO("Marker left pose updated");
     }
+    /*
     if(getLinkPose("map", "base", pose))
     {
         int_marker_b_.pose = pose.pose;
