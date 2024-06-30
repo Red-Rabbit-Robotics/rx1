@@ -62,7 +62,7 @@ Rx1Ik::Rx1Ik(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 
     // Initialize subscribers
     right_gripper_pose_sub_ = nh_.subscribe("right_gripper_pose", 10, &Rx1Ik::rightGripperPoseCallback, this);
-    left_gripper_pose_sub_ = nh_.subscribe("right_gripper_pose", 10, &Rx1Ik::leftGripperPoseCallback, this);
+    left_gripper_pose_sub_ = nh_.subscribe("left_gripper_pose", 10, &Rx1Ik::leftGripperPoseCallback, this);
 
     // Initialize joint states
     sensor_msgs::JointState right_joint_state_msg;
