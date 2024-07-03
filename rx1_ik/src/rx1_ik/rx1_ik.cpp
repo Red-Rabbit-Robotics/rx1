@@ -57,8 +57,8 @@ Rx1Ik::Rx1Ik(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     }
 
     // Publisher for joint states
-    left_joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>("right_arm_joint_states", 10);
-    right_joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>("left_arm_joint_states", 10);
+    left_joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>("left_arm_joint_states", 10);
+    right_joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>("right_arm_joint_states", 10);
 
     // Initialize subscribers
     right_gripper_pose_sub_ = nh_.subscribe("right_gripper_pose", 10, &Rx1Ik::rightGripperPoseCallback, this);

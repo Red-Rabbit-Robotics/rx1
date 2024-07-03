@@ -50,14 +50,14 @@ private:
     static constexpr std::array<int, 3> torso_servo_gears_ = {3, 3, 3};
 
     static constexpr std::array<int, 6> right_hand_servo_ids_ = {31, 32, 33, 34, 35, 36};
-    static constexpr std::array<int, 6> right_hand_servo_default_ = {200, 2400, 2350, 440, 600, 440};
-    static constexpr std::array<int, 6> right_hand_servo_range_ = {0, -300, -450, 200, -200, 200};
+    static constexpr std::array<int, 6> right_hand_servo_default_ = {200, 2400, 2300, 420, 600, 440};
+    static constexpr std::array<int, 6> right_hand_servo_range_ = {0, -300, -400, 200, -200, 200};
 
     static constexpr std::array<int, 6> left_hand_servo_ids_ = {41, 42, 43, 44, 45, 46};
     static constexpr std::array<int, 6> left_hand_servo_default_ = {512, 2400, 2400, 440, 600, 440};
     static constexpr std::array<int, 6> left_hand_servo_range_ = {0, -100, -400, 200, -200, 200};
 
-    ros::Subscriber joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/joint_states", 10, &Rx1Motor::jointStateCallback, this);
+    ros::Subscriber joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/command_joint_states", 10, &Rx1Motor::jointStateCallback, this);
     ros::Subscriber right_arm_joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/right_arm_joint_states", 10, &Rx1Motor::rightArmJointStateCallback, this);
     ros::Subscriber left_arm_joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/left_arm_joint_states", 10, &Rx1Motor::leftArmJointStateCallback, this);
     ros::Subscriber torso_joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/torso_joint_states", 10, &Rx1Motor::torsoJointStateCallback, this);

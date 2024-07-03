@@ -32,6 +32,7 @@ Rx1Motor::Rx1Motor(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     servo_port_ = "/dev/ttyUSB-arduino4.3";
 
     // Torso IK test
+    /*
     auto angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, 0, 0); 
     ROS_INFO("torso ik result for pitch 0, roll 0 is: %f %f", angles[0], angles[1]);
     angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, 0.2, 0); 
@@ -40,7 +41,7 @@ Rx1Motor::Rx1Motor(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     ROS_INFO("torso ik result for pitch 0, roll 0.2 is: %f %f", angles[0], angles[1]);
     angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, 0.2, 0.2); 
     ROS_INFO("torso ik result for pitch 0.2, roll 0.2 is: %f %f", angles[0], angles[1]);
-
+    */
     if (!sts_servo_.begin(1000000, servo_port_.c_str()))
     {
         ROS_ERROR("[RX1_MOTOR] Failed initialize sts servo!");
@@ -50,7 +51,35 @@ Rx1Motor::Rx1Motor(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     {
         ROS_ERROR("[RX1_MOTOR] Failed initialize scs servo!");
     }
-
+    
+    for(int i = 0; i < right_arm_servo_ids_.size(); i ++)
+    {
+        u8 id = right_arm_servo_ids_[i];
+        sts_servo_.WritePosEx(id, 2048, 200, 20);
+    }
+    for(int i = 0; i < left_arm_servo_ids_.size(); i ++)
+    {
+        u8 id = left_arm_servo_ids_[i];
+        sts_servo_.WritePosEx(id, 2048, 200, 20);
+    }
+    for(int i = 0; i < torso_servo_ids_.size(); i ++)
+    {
+        u8 id = torso_servo_ids_[i];
+        sts_servo_.WritePosEx(id, 2048, 200, 20);
+    }
+    for(int i = 0; i < head_servo_ids_.size(); i ++)
+    {
+        u8 id = head_servo_ids_[i];
+        
+        if (i == 0 || i == 1 || i == 2)
+        {
+            sts_servo_.WritePosEx(id, 2048, 200, 20);
+        }
+        else
+        {
+            scs_servo_.WritePos(id, 512, 0, 100);
+        }
+    }
 }
 
 Rx1Motor::~Rx1Motor()
