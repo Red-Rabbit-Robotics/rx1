@@ -53,6 +53,9 @@ private:
     sensor_msgs::JointState right_prev_joint_state_msg_;
     sensor_msgs::JointState left_prev_joint_state_msg_;
 
+    sensor_msgs::JointState right_cur_joint_state_msg_;
+    sensor_msgs::JointState left_cur_joint_state_msg_;
+    
     geometry_msgs::TransformStamped world_to_base_tf_stamped_;
 
     tf2_ros::Buffer tf_buffer_;

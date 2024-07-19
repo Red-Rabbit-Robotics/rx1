@@ -84,7 +84,8 @@ Rx1Ik::Rx1Ik(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     right_joint_state_msg.position[3] = -1.57;
     right_joint_state_pub_.publish(right_joint_state_msg);
     right_prev_joint_state_msg_ = right_joint_state_msg;
-    
+    right_cur_joint_state_msg_ = right_joint_state_msg;
+
 
     sensor_msgs::JointState left_joint_state_msg;
     left_joint_state_msg.header.stamp = ros::Time::now();
@@ -105,6 +106,7 @@ Rx1Ik::Rx1Ik(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     left_joint_state_msg.position[3] = -1.57;
     left_joint_state_pub_.publish(left_joint_state_msg);
     left_prev_joint_state_msg_ = left_joint_state_msg;
+    left_cur_joint_state_msg_ = left_joint_state_msg;
 
     ROS_INFO("Joints initialized");
 
@@ -383,7 +385,13 @@ void Rx1Ik::rightGripperPoseCallback(const geometry_msgs::Pose& msg)
     
     // Solve IK
     KDL::JntArray result_joint_positions;
-    if (ik_solver_r_ptr_->solveIK(desired_pose, result_joint_positions))
+    //if (ik_solver_r_ptr_->solveIK(desired_pose, result_joint_positions))
+    
+    double before_ik_time = ros::Time::now().toSec();
+    auto ik_solved = ik_solver_r_ptr_->solveIK(desired_pose, result_joint_positions);
+    ROS_INFO("right ik took %f sec", ros::Time::now().toSec() - before_ik_time); 
+
+    if (ik_solved)
     {
         bool success = true;
         if ((ros::Time::now().toSec() - right_last_ik_time_) < tracking_timeout_) // if it's within tracking_timeout, then the angle change should be smaller than max_angle_change
@@ -401,14 +409,15 @@ void Rx1Ik::rightGripperPoseCallback(const geometry_msgs::Pose& msg)
             {
                 for (int i = 0; i < result_joint_positions.rows(); ++i)
                 {
-                    right_prev_joint_state_msg_.position[i] = right_prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
-                    //prev_joint_state_msg_.position[i] = result_joint_positions(i);
+                    //right_prev_joint_state_msg_.position[i] = right_prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
+                    right_prev_joint_state_msg_.position[i] = result_joint_positions(i);
                 }
             }
             else
             {
                 for (int i = 0; i < result_joint_positions.rows(); ++i)
                 {
+                    //right_prev_joint_state_msg_.position[i] = right_prev_joint_state_msg_.position[i]*0.7 + result_joint_positions(i)*0.3;
                     right_prev_joint_state_msg_.position[i] = result_joint_positions(i);
                 }
             }
@@ -453,14 +462,15 @@ void Rx1Ik::leftGripperPoseCallback(const geometry_msgs::Pose& msg)
             {
                 for (int i = 0; i < result_joint_positions.rows(); ++i)
                 {
-                    left_prev_joint_state_msg_.position[i] = left_prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
-                    //prev_joint_state_msg_.position[i] = result_joint_positions(i);
+                    //left_prev_joint_state_msg_.position[i] = left_prev_joint_state_msg_.position[i]*0.9 + result_joint_positions(i)*0.1;
+                    left_prev_joint_state_msg_.position[i] = result_joint_positions(i);
                 }
             }
             else
             {
                 for (int i = 0; i < result_joint_positions.rows(); ++i)
                 {
+                    //left_prev_joint_state_msg_.position[i] = left_prev_joint_state_msg_.position[i]*0.7 + result_joint_positions(i)*0.3;
                     left_prev_joint_state_msg_.position[i] = result_joint_positions(i);
                 }
             }
@@ -486,11 +496,27 @@ void Rx1Ik::spinOnce()
 
 void Rx1Ik::update()
 {
+    /*
     right_prev_joint_state_msg_.header.stamp = ros::Time::now();
     right_joint_state_pub_.publish(right_prev_joint_state_msg_);
     left_prev_joint_state_msg_.header.stamp = ros::Time::now();
     left_joint_state_pub_.publish(left_prev_joint_state_msg_);
-  
+   */ 
+    
+    for (int i = 0; i < right_cur_joint_state_msg_.position.size(); i ++)
+    {
+        right_cur_joint_state_msg_.position[i] = right_cur_joint_state_msg_.position[i]*0.9 + right_prev_joint_state_msg_.position[i]*0.1;
+    }
+    right_cur_joint_state_msg_.header.stamp = ros::Time::now();
+    right_joint_state_pub_.publish(right_cur_joint_state_msg_);
+
+    for (int i = 0; i < left_cur_joint_state_msg_.position.size(); i ++)
+    {
+        left_cur_joint_state_msg_.position[i] = left_cur_joint_state_msg_.position[i]*0.9 + left_prev_joint_state_msg_.position[i]*0.1;
+    }
+    left_cur_joint_state_msg_.header.stamp = ros::Time::now();
+    left_joint_state_pub_.publish(left_cur_joint_state_msg_);
+
     world_to_base_tf_stamped_.header.stamp = ros::Time::now();
     tf_br_.sendTransform(world_to_base_tf_stamped_);
     geometry_msgs::PoseStamped pose;
@@ -499,14 +525,14 @@ void Rx1Ik::update()
         int_marker_r_.pose = pose.pose;
         marker_server_.insert(int_marker_r_);
         marker_server_.applyChanges();
-        ROS_INFO("Marker right pose updated");
+        //ROS_INFO("Marker right pose updated");
     }
     if(getLinkPose(chain_start_, chain_l_end_, pose))
     {
         int_marker_l_.pose = pose.pose;
         marker_server_.insert(int_marker_l_);
         marker_server_.applyChanges();
-        ROS_INFO("Marker left pose updated");
+        //ROS_INFO("Marker left pose updated");
     }
     /*
     if(getLinkPose("map", "base", pose))
@@ -521,7 +547,7 @@ void Rx1Ik::update()
 
 void Rx1Ik::spin()
 {
-    ros::Rate rate(10);
+    ros::Rate rate(20);
     while(ros::ok())
     {
         spinOnce();

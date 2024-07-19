@@ -58,11 +58,11 @@ private:
     static constexpr std::array<int, 6> left_hand_servo_range_ = {0, -100, -400, 200, -200, 200};
 
     ros::Subscriber joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/command_joint_states", 10, &Rx1Motor::jointStateCallback, this);
-    ros::Subscriber right_arm_joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/right_arm_joint_states", 10, &Rx1Motor::rightArmJointStateCallback, this);
+    ros::Subscriber right_arm_joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/right_arm_joint_states", 100, &Rx1Motor::rightArmJointStateCallback, this);
     ros::Subscriber left_arm_joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/left_arm_joint_states", 10, &Rx1Motor::leftArmJointStateCallback, this);
     ros::Subscriber torso_joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/torso_joint_states", 10, &Rx1Motor::torsoJointStateCallback, this);
     ros::Subscriber head_joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/head_joint_states", 10, &Rx1Motor::headJointStateCallback, this);
-    ros::Subscriber right_gripper_sub_ = nh_.subscribe<std_msgs::Float32>("/right_gripper", 10, &Rx1Motor::rightGripperCallback, this);
+    ros::Subscriber right_gripper_sub_ = nh_.subscribe<std_msgs::Float32>("/right_gripper", 100, &Rx1Motor::rightGripperCallback, this);
     ros::Subscriber left_gripper_sub_ = nh_.subscribe<std_msgs::Float32>("/left_gripper", 10, &Rx1Motor::leftGripperCallback, this);
 
     void jointStateCallback(const sensor_msgs::JointState::ConstPtr& msg);
@@ -99,6 +99,7 @@ private:
     static constexpr int HAND_SPEED_ = 0;
     static constexpr int HAND_ACC_ = 100;
 
+    ros::Time last_spin_time_;
 };
 
 } // namespace rx1_motor

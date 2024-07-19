@@ -80,6 +80,8 @@ Rx1Motor::Rx1Motor(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
             scs_servo_.WritePos(id, 512, 0, 100);
         }
     }
+
+    last_spin_time_ = ros::Time::now();
 }
 
 Rx1Motor::~Rx1Motor()
@@ -100,6 +102,9 @@ void Rx1Motor::spin()
     {
         spinOnce();
         rate.sleep();
+        double actual_rate = 1.0 / (ros::Time::now() - last_spin_time_).toSec();
+        last_spin_time_ = ros::Time::now();
+        ROS_INFO("[RX1_MOTOR] actual rate is %f", actual_rate);
     }
 }
 
@@ -156,8 +161,11 @@ void Rx1Motor::rightArmJointStateCallback(const sensor_msgs::JointState::ConstPt
     // Access the joint state information
     std::vector<double> joint_positions = msg->position;
 
+    ros::Time command_start_time = ros::Time::now(); 
     // Process the joint state information
     motorCommand(right_arm_servo_ids_, right_arm_servo_dirs_, right_arm_servo_gears_, joint_positions, ARM_SPEED_, ARM_ACC_);
+    double time_spend = (ros::Time::now() - command_start_time).toSec();
+    ROS_INFO("[RX1_MOTOR] right arm command time is %f sec", time_spend);
 }
 
 void Rx1Motor::leftArmJointStateCallback(const sensor_msgs::JointState::ConstPtr& msg)
@@ -257,18 +265,21 @@ void Rx1Motor::headMotorCommand(const std::vector<double>& joint_positions)
 
 void Rx1Motor::rightGripperCallback(const std_msgs::Float32ConstPtr& msg)
 {
+    ros::Time command_start_time = ros::Time::now(); 
+
     double grip_ratio = msg->data;
 
     int length = right_hand_servo_ids_.size();
     u8 id;
     s16 pos;
     u16 speed = HAND_SPEED_;
-    u8 acc = HAND_ACC_;
+    u8 acc = HAND_ACC_;    
     
     for (int i = 0; i < length; i ++)
     {
         id = right_hand_servo_ids_[i];
         pos = right_hand_servo_default_[i] + grip_ratio * right_hand_servo_range_[i];
+        
         if (i == 1 || i == 2) // thumb and index fingers are sts servo, others are scs servos
         {
             sts_servo_.WritePosEx(id, pos, speed, acc);
@@ -285,9 +296,13 @@ void Rx1Motor::rightGripperCallback(const std_msgs::Float32ConstPtr& msg)
         {
             scs_servo_.WritePos(id, pos, 0, 200); // id, pos, time, speed
         }
-
-        
     }
+
+    // Thumb yaw
+    scs_servo_.WritePos(right_hand_servo_ids_[0], 200, 0, 400); // id, pos, time, speed
+   
+    double time_spend = (ros::Time::now() - command_start_time).toSec();
+    ROS_INFO("[RX1_MOTOR] right hand command time is %f sec", time_spend);
 }
 
 void Rx1Motor::leftGripperCallback(const std_msgs::Float32::ConstPtr& msg)
@@ -354,6 +369,13 @@ void Rx1Motor::motorCommand(const std::array<int, N>& joint_ids,
         accs[i] = acc*joint_gears[i];
         speeds[i] = speed*joint_gears[i];
         pos[i] = joint_angles[i]/3.14*2048*joint_dirs[i]*joint_gears[i] + 2048;
+    
+        // temporary change: make forearm faster
+        if (i >= 3)
+        {
+            accs[i] = accs[i] * 10;
+            speeds[i] = 0;
+        }
     }
     sts_servo_.SyncWritePosEx(ids, length, pos, speeds, accs);
 
