@@ -4,7 +4,7 @@
   
   <include file="$(find rx1_description)/launch/urdf.launch"/>
   
-  <!--include file="$(find rx1_bringup)/launch/includes/gemini2.launch"/-->
+  <include file="$(find rx1_bringup)/launch/includes/gemini2.launch"/>
   <!--include file="$(find rx1_bringup)/launch/includes/description.launch.xml"/-->
 
   <!--node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"-->

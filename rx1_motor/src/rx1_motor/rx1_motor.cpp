@@ -323,11 +323,22 @@ void Rx1Motor::leftGripperCallback(const std_msgs::Float32::ConstPtr& msg)
         {
             sts_servo_.WritePosEx(id, pos, speed, acc);
         }
-        else
+        else if (i == 3)
         {
-            scs_servo_.WritePos(id, pos, 0, 100); // id, pos, time, speed
+            scs_servo_.WritePos(id, pos, 0, 400); // id, pos, time, speed
+        }
+        else if (i == 4)
+        {
+            scs_servo_.WritePos(id, pos, 0, 300); // id, pos, time, speed
+        }
+        else if (i == 5)
+        {
+            scs_servo_.WritePos(id, pos, 0, 200); // id, pos, time, speed
         }
     }
+
+    // Thumb yaw
+    scs_servo_.WritePos(left_hand_servo_ids_[0], 512, 0, 400); // id, pos, time, speed
 
 }
 
