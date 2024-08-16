@@ -364,7 +364,6 @@ void Rx1Motor::headMotorCommand(const std::vector<double>& joint_positions, cons
     }
 }
 
-
 template<size_t N>
 void Rx1Motor::motorCommand(const std::array<int, N>& joint_ids,
                             const std::array<int, N>& joint_dirs,
