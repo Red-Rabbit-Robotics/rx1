@@ -75,29 +75,39 @@ private:
 
     std::array<double, 2> torsoIk(double d, double L1, double h1, double h2, double roll, double pitch);
    
-    void headMotorCommand(const std::vector<double>& joint_positinos);
+    void headMotorCommand(const std::vector<double>& joint_positinos,
+                          const std::vector<double>& joint_speeds,
+                          const std::vector<double>& joint_accs);
 
     template<size_t N>
     void motorCommand(const std::array<int, N>& joint_ids,
                                 const std::array<int, N>& joint_dirs,
                                 const std::array<int, N>& joint_gears,
                                 const std::vector<double>& joint_angles, 
-                                const int speed=100, 
-                                const int acc= 20);
+                                const std::vector<double>& joint_speeds, 
+                                const std::vector<double>& joint_accs);
 
     static constexpr double TORSO_D_ = 0.0865;
     static constexpr double TORSO_L1_ = 0.05;
     static constexpr double TORSO_H1_ = 0.11;
     static constexpr double TORSO_H2_ = 0.11;
 
-    static constexpr int TORSO_SPEED_ = 500;
-    static constexpr int TORSO_ACC_ = 10;
-    static constexpr int ARM_SPEED_ = 700;
-    static constexpr int ARM_ACC_ = 20;
-    static constexpr int HEAD_SPEED_ = 500;
-    static constexpr int HEAD_ACC_ = 50;
-    static constexpr int HAND_SPEED_ = 0;
-    static constexpr int HAND_ACC_ = 100;
+    static constexpr double TORSO_SPEED_ = 1.0;// 500;
+    static constexpr double TORSO_ACC_ = 1.5; //10;
+    static constexpr double ARM_SPEED_ = 1.0; //700;
+    static constexpr double ARM_ACC_ = 3.0; //20;
+    static constexpr double HEAD_SPEED_ = 1.0; //500;
+    static constexpr double HEAD_ACC_ = 7.0; //50;
+    static constexpr double HAND_SPEED_ = 0; // maximum
+    static constexpr double HAND_ACC_ = 15; //100;
+
+    // Based on Feetech manual, 50step/s = 0.732 RPM
+    // then 1 step /s = 0.00153232 rad /s
+    // 1/ 0.00153232 = 652.6051999582332, multiple this value to turn rad/s to Feetech speed
+    const double SPEED_CONST_ = 652.6051999582332;
+    // Based on Feetech manual, 1 unit of acc is 100 step/s^2
+    // thus we can multiple this value to turn rad/s^2 to Feetech acc
+    const double ACC_CONST_ = 6.526051999582332;
 
     ros::Time last_spin_time_;
 };

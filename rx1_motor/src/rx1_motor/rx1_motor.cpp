@@ -139,12 +139,19 @@ void Rx1Motor::jointStateCallback(const sensor_msgs::JointState::ConstPtr& msg)
     auto angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, torso_joint_positions[1], torso_joint_positions[2]); 
     torso_joint_positions[1] = angles[0];
     torso_joint_positions[2] = angles[1];
-    motorCommand(torso_servo_ids_, torso_servo_dirs_, torso_servo_gears_, torso_joint_positions, TORSO_SPEED_, TORSO_ACC_);
+    std::vector<double> torso_speeds_(torso_servo_ids_.size(), TORSO_SPEED_);
+    std::vector<double> torso_accs_(torso_servo_ids_.size(), TORSO_ACC_);
+    motorCommand(torso_servo_ids_, torso_servo_dirs_, torso_servo_gears_, torso_joint_positions, torso_speeds_, torso_accs_);
 
-    headMotorCommand(head_joint_positions);
+    std::vector<double> head_speeds(head_servo_ids_.size(), HEAD_SPEED_);
+    std::vector<double> head_accs(head_servo_ids_.size(), HEAD_ACC_);
+    headMotorCommand(head_joint_positions, head_speeds, head_accs);
 
-    motorCommand(right_arm_servo_ids_, right_arm_servo_dirs_, right_arm_servo_gears_, right_arm_joint_positions, ARM_SPEED_, ARM_ACC_);
-    motorCommand(left_arm_servo_ids_, left_arm_servo_dirs_, left_arm_servo_gears_, left_arm_joint_positions, ARM_SPEED_, ARM_ACC_);
+
+    std::vector<double> arm_speeds(right_arm_servo_ids_.size(), ARM_SPEED_);
+    std::vector<double> arm_accs(right_arm_servo_ids_.size(), ARM_ACC_);
+    motorCommand(right_arm_servo_ids_, right_arm_servo_dirs_, right_arm_servo_gears_, right_arm_joint_positions, arm_speeds, arm_accs);
+    motorCommand(left_arm_servo_ids_, left_arm_servo_dirs_, left_arm_servo_gears_, left_arm_joint_positions, arm_speeds, arm_accs);
 
 }
 
@@ -156,7 +163,9 @@ void Rx1Motor::rightArmJointStateCallback(const sensor_msgs::JointState::ConstPt
 
     //ros::Time command_start_time = ros::Time::now(); 
     // Process the joint state information
-    motorCommand(right_arm_servo_ids_, right_arm_servo_dirs_, right_arm_servo_gears_, joint_positions, ARM_SPEED_, ARM_ACC_);
+    std::vector<double> arm_speeds(right_arm_servo_ids_.size(), ARM_SPEED_);
+    std::vector<double> arm_accs(right_arm_servo_ids_.size(), ARM_ACC_);
+    motorCommand(right_arm_servo_ids_, right_arm_servo_dirs_, right_arm_servo_gears_, joint_positions, arm_speeds, arm_accs);
     //double time_spend = (ros::Time::now() - command_start_time).toSec();
     //ROS_INFO("[RX1_MOTOR] right arm command time is %f sec", time_spend);
 }
@@ -167,7 +176,9 @@ void Rx1Motor::leftArmJointStateCallback(const sensor_msgs::JointState::ConstPtr
     std::vector<double> joint_positions = msg->position;
 
     // Process the joint state information
-    motorCommand(left_arm_servo_ids_, left_arm_servo_dirs_, left_arm_servo_gears_, joint_positions, ARM_SPEED_, ARM_ACC_);
+    std::vector<double> arm_speeds(left_arm_servo_ids_.size(), ARM_SPEED_);
+    std::vector<double> arm_accs(left_arm_servo_ids_.size(), ARM_ACC_);
+    motorCommand(left_arm_servo_ids_, left_arm_servo_dirs_, left_arm_servo_gears_, joint_positions, arm_speeds, arm_accs);
 }
 
 void Rx1Motor::torsoJointStateCallback(const sensor_msgs::JointState::ConstPtr& msg)
@@ -180,7 +191,10 @@ void Rx1Motor::torsoJointStateCallback(const sensor_msgs::JointState::ConstPtr& 
     joint_positions[1] = angles[0];
     joint_positions[2] = angles[1];
 
-    motorCommand(torso_servo_ids_, torso_servo_dirs_, torso_servo_gears_, joint_positions, TORSO_SPEED_, TORSO_ACC_);
+    std::vector<double> torso_speeds(torso_servo_ids_.size(), TORSO_SPEED_);
+    std::vector<double> torso_accs(torso_servo_ids_.size(), TORSO_ACC_);
+   
+    motorCommand(torso_servo_ids_, torso_servo_dirs_, torso_servo_gears_, joint_positions, torso_speeds, torso_accs);
 }
 
 std::array<double, 2> Rx1Motor::torsoIk(double d, double L1, double h1, double h2, double roll, double pitch)
@@ -239,32 +253,11 @@ void Rx1Motor::headJointStateCallback(const sensor_msgs::JointState::ConstPtr& m
     // Access the joint state information
     std::vector<double> joint_positions = msg->position;
 
+    std::vector<double> joint_speeds(head_servo_ids_.size(), HEAD_SPEED_);
+    std::vector<double> joint_accs(head_servo_ids_.size(), HEAD_ACC_);
+
     // Process the joint state information
-    headMotorCommand(joint_positions);
-}
-
-void Rx1Motor::headMotorCommand(const std::vector<double>& joint_positions)
-{   
-    u8 id;
-    s16 pos;
-    u16 speed = HEAD_SPEED_;
-    u8 acc = HEAD_ACC_;
-
-    for (int i = 0; i < joint_positions.size(); i ++)
-    {
-        id = head_servo_ids_[i]; 
-        if (i == 0 || i == 1 || i == 2) //neck
-        {
-            pos = joint_positions[i]/3.14*2048*head_servo_dirs_[i]*head_servo_gears_[i] + 2048;
-            sts_servo_.WritePosEx(id, pos, speed, acc);
-        }
-        else // ear
-        {
-            pos = joint_positions[i]/3.14*512*head_servo_dirs_[i]*head_servo_gears_[i] + 512;
-            scs_servo_.WritePos(id, pos, 0, 0); // id, pos, time, speed
-        }
-    }
-
+    headMotorCommand(joint_positions, joint_speeds, joint_accs);
 }
 
 void Rx1Motor::rightGripperCallback(const std_msgs::Float32ConstPtr& msg)
@@ -276,13 +269,13 @@ void Rx1Motor::rightGripperCallback(const std_msgs::Float32ConstPtr& msg)
     int length = right_hand_servo_ids_.size();
     u8 id;
     s16 pos;
-    u16 speed = HAND_SPEED_;
-    u8 acc = HAND_ACC_;    
-    
+    u16 speed = static_cast<unsigned short>(HAND_SPEED_ * SPEED_CONST_);
+    u8 acc = static_cast<unsigned char>(HAND_ACC_ * ACC_CONST_);
+
     for (int i = 0; i < length; i ++)
     {
-        id = right_hand_servo_ids_[i];
-        pos = right_hand_servo_default_[i] + grip_ratio * right_hand_servo_range_[i];
+        id = static_cast<unsigned char>(right_hand_servo_ids_[i]);
+        pos = static_cast<short>(right_hand_servo_default_[i] + grip_ratio * right_hand_servo_range_[i]);
         
         if (i == 1 || i == 2) // thumb and index fingers are sts servo, others are scs servos
         {
@@ -316,13 +309,13 @@ void Rx1Motor::leftGripperCallback(const std_msgs::Float32::ConstPtr& msg)
     int length = left_hand_servo_ids_.size();
     u8 id;
     s16 pos;
-    u16 speed = HAND_SPEED_;
-    u8 acc = HAND_ACC_;
+    u16 speed = static_cast<unsigned short>(HAND_SPEED_ * SPEED_CONST_);
+    u8 acc = static_cast<unsigned char>(HAND_ACC_ * ACC_CONST_);
     
     for (int i = 0; i < length; i ++)
     {
-        id = left_hand_servo_ids_[i];
-        pos = left_hand_servo_default_[i] + grip_ratio * left_hand_servo_range_[i];
+        id = static_cast<unsigned char>(left_hand_servo_ids_[i]);
+        pos = static_cast<short>(left_hand_servo_default_[i] + grip_ratio * left_hand_servo_range_[i]);
         if (i == 1 || i == 2) // thumb and index fingers are sts servo, others are scs servos
         {
             sts_servo_.WritePosEx(id, pos, speed, acc);
@@ -346,13 +339,39 @@ void Rx1Motor::leftGripperCallback(const std_msgs::Float32::ConstPtr& msg)
 
 }
 
+void Rx1Motor::headMotorCommand(const std::vector<double>& joint_positions, const std::vector<double>& joint_speeds, const std::vector<double>& joint_accs)
+{   
+    u8 id;
+    s16 pos;
+    u16 speed;
+    u8 acc;
+
+    for (int i = 0; i < joint_positions.size(); i ++)
+    {
+        id = static_cast<unsigned char>(head_servo_ids_[i]); 
+        speed = static_cast<unsigned short>(joint_speeds[i] * SPEED_CONST_);
+        acc = static_cast<unsigned char>(joint_accs[i] * ACC_CONST_);
+        if (i == 0 || i == 1 || i == 2) //neck
+        {
+            pos = static_cast<short>(joint_positions[i]/3.14*2048*head_servo_dirs_[i]*head_servo_gears_[i] + 2048);
+            sts_servo_.WritePosEx(id, pos, speed, acc);
+        }
+        else // ear
+        {
+            pos = static_cast<short>(joint_positions[i]/3.14*512*head_servo_dirs_[i]*head_servo_gears_[i] + 512);
+            scs_servo_.WritePos(id, pos, 0, 0); // id, pos, time, speed
+        }
+    }
+}
+
+
 template<size_t N>
 void Rx1Motor::motorCommand(const std::array<int, N>& joint_ids,
                             const std::array<int, N>& joint_dirs,
                             const std::array<int, N>& joint_gears,
                             const std::vector<double>& joint_angles, 
-                            const int speed, 
-                            const int acc)
+                            const std::vector<double>& joint_speeds, 
+                            const std::vector<double>& joint_accs)
 {
     int length = joint_ids.size();
     u8 *ids = (u8 *)malloc(length * sizeof(u8));
@@ -367,16 +386,16 @@ void Rx1Motor::motorCommand(const std::array<int, N>& joint_ids,
 
     for (int i = 0; i < length; i ++)
     {
-        ids[i] = joint_ids[i];
-        accs[i] = acc*joint_gears[i];
-        speeds[i] = speed*joint_gears[i];
-        pos[i] = joint_angles[i]/3.14*2048*joint_dirs[i]*joint_gears[i] + 2048;
+        ids[i] = static_cast<unsigned char>(joint_ids[i]);
+        speeds[i] = static_cast<unsigned short>(joint_speeds[i]*joint_gears[i]*SPEED_CONST_);
+        accs[i] = static_cast<unsigned char>(joint_accs[i]*joint_gears[i]*ACC_CONST_);
+        pos[i] = static_cast<short>(joint_angles[i]/3.14*2048*joint_dirs[i]*joint_gears[i] + 2048);
     
         // temporary change: make forearm faster
         if (i >= 3)
         {
-            accs[i] = accs[i] * 10;
             speeds[i] = 0;
+            accs[i] = accs[i] * 10;
         }
     }
     sts_servo_.SyncWritePosEx(ids, length, pos, speeds, accs);
