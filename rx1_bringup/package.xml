@@ -6,8 +6,8 @@
     roslaunch scripts for starting the rx1 robot
   </description>
   <license>MIT</license>
-  <author email="lingkangzhang@gmail.com">zlingkang</author>
-  <maintainer email="lingkangzhang@gmail.com">zlingkang</maintainer>
+  <author email="lethiic@gmail.com">lethic</author>
+  <maintainer email="lethiic@gmail.com">lethic</maintainer>
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
   <depend>std_msgs</depend>

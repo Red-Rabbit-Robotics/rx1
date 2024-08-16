@@ -1,0 +1,8 @@
+#ik config for rviz interactive marker
+
+chain_r_end: "right_forearm_roll_link"
+chain_l_end: "left_forearm_roll_link"
+eps: 0.01
+ik_timeout: 0.05
+max_angle_change: 2.0
+tracking_timeout: 1

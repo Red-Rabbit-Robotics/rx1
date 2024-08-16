@@ -6,8 +6,8 @@
     Inverse Kinematics of the RX1 robot
   </description>
   <license>MIT</license>
-  <author email="lingkangzhang@gmail.com">Lingkang</author>
-  <maintainer email="lingkangzhang@gmail.com">Lingkang</maintainer>
+  <author email="lethiic@gmail.com">lethic</author>
+  <maintainer email="lethiic@gmail.com">lethic</maintainer>
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>std_msgs</build_depend>
