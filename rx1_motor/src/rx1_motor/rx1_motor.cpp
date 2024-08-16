@@ -29,19 +29,8 @@ Rx1Motor::Rx1Motor(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     : nh_(nh),
       priv_nh_(priv_nh)
 {
-    servo_port_ = "/dev/ttyUSB-arduino4.3";
+    nh_.param<std::string>("servo_port", servo_port_, "/dev/ttyUSB-arduino4.3");
 
-    // Torso IK test
-    /*
-    auto angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, 0, 0); 
-    ROS_INFO("torso ik result for pitch 0, roll 0 is: %f %f", angles[0], angles[1]);
-    angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, 0.2, 0); 
-    ROS_INFO("torso ik result for pitch 0.2, roll 0 is: %f %f", angles[0], angles[1]);
-    angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, 0, 0.2); 
-    ROS_INFO("torso ik result for pitch 0, roll 0.2 is: %f %f", angles[0], angles[1]);
-    angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, 0.2, 0.2); 
-    ROS_INFO("torso ik result for pitch 0.2, roll 0.2 is: %f %f", angles[0], angles[1]);
-    */
     if (!sts_servo_.begin(1000000, servo_port_.c_str()))
     {
         ROS_ERROR("[RX1_MOTOR] Failed initialize sts servo!");
@@ -165,11 +154,11 @@ void Rx1Motor::rightArmJointStateCallback(const sensor_msgs::JointState::ConstPt
     // Access the joint state information
     std::vector<double> joint_positions = msg->position;
 
-    ros::Time command_start_time = ros::Time::now(); 
+    //ros::Time command_start_time = ros::Time::now(); 
     // Process the joint state information
     motorCommand(right_arm_servo_ids_, right_arm_servo_dirs_, right_arm_servo_gears_, joint_positions, ARM_SPEED_, ARM_ACC_);
-    double time_spend = (ros::Time::now() - command_start_time).toSec();
-    ROS_INFO("[RX1_MOTOR] right arm command time is %f sec", time_spend);
+    //double time_spend = (ros::Time::now() - command_start_time).toSec();
+    //ROS_INFO("[RX1_MOTOR] right arm command time is %f sec", time_spend);
 }
 
 void Rx1Motor::leftArmJointStateCallback(const sensor_msgs::JointState::ConstPtr& msg)
@@ -233,13 +222,24 @@ std::array<double, 2> Rx1Motor::torsoIk(double d, double L1, double h1, double h
     }
 }
 
+    // Torso IK test
+    /*
+    auto angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, 0, 0); 
+    ROS_INFO("torso ik result for pitch 0, roll 0 is: %f %f", angles[0], angles[1]);
+    angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, 0.2, 0); 
+    ROS_INFO("torso ik result for pitch 0.2, roll 0 is: %f %f", angles[0], angles[1]);
+    angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, 0, 0.2); 
+    ROS_INFO("torso ik result for pitch 0, roll 0.2 is: %f %f", angles[0], angles[1]);
+    angles = torsoIk(TORSO_D_, TORSO_L1_, TORSO_H1_, TORSO_H2_, 0.2, 0.2); 
+    ROS_INFO("torso ik result for pitch 0.2, roll 0.2 is: %f %f", angles[0], angles[1]);
+    */
+
 void Rx1Motor::headJointStateCallback(const sensor_msgs::JointState::ConstPtr& msg)
 {
     // Access the joint state information
     std::vector<double> joint_positions = msg->position;
 
     // Process the joint state information
-    //motorCommand(head_servo_ids_, head_servo_dirs_, head_servo_gears_, joint_positions, HEAD_SPEED_, HEAD_ACC_);
     headMotorCommand(joint_positions);
 }
 
@@ -364,19 +364,6 @@ void Rx1Motor::motorCommand(const std::array<int, N>& joint_ids,
     {
         ROS_WARN("[RX1_MOTOR] Motor command memory allocation failed!");
     }
-    /*
-    u8 ids[7];
-    s16 pos[7];
-    u16 speeds[7];
-    u8 accs[7];
-    for (int i = 0; i < 7; i ++)
-    {
-        ids[i] = sts_servo_ids_[i];
-        accs[i] = acc;
-        speeds[i] = speed;
-        pos[i] = joint_angles[i]/3.14*2048*sts_servo_dirs_[i]*sts_servo_gears_[i] + 2048;
-    }
-    */
 
     for (int i = 0; i < length; i ++)
     {

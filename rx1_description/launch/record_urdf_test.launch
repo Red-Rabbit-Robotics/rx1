@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
+<!--launch file for rosbag recording-->
+
 <launch>
 
   <arg name="model" default="$(find rx1_description)/urdf/rx1.urdf.xacro"/>

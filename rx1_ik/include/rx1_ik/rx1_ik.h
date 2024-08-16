@@ -21,7 +21,6 @@ public:
     void initializeInteractiveMarker();
     void markerRightCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
     void markerLeftCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
-    //void markerBaseCallback(const visualization_msgs::InteractiveMarkerFeedbackConstPtr& feedback);
     void rightGripperPoseCallback(const geometry_msgs::Pose& msg);
     void leftGripperPoseCallback(const geometry_msgs::Pose& msg);
     void spinOnce();
@@ -36,7 +35,6 @@ private:
     interactive_markers::InteractiveMarkerServer marker_server_;
     visualization_msgs::InteractiveMarker int_marker_r_;
     visualization_msgs::InteractiveMarker int_marker_l_;
-    //visualization_msgs::InteractiveMarker int_marker_b_;
    
     ros::Subscriber right_gripper_pose_sub_;
     ros::Subscriber left_gripper_pose_sub_;
