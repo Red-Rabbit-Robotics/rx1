@@ -12,7 +12,7 @@
   <node name="joint_state_aggregator" pkg="joint_state_publisher" type="joint_state_publisher" output="screen">
     <!-- Remap the input topics to the topics you want to aggregate -->
     <remap from="/joint_states" to="/aggregated_joint_states" />
-    <rosparam param="source_list">['/right_arm_joint_states', '/left_arm_joint_states', '/torso_joint_states', '/head_joint_states', '/command_joint_states'] </rosparam>
+    <rosparam param="source_list">['/right_arm_joint_states', '/left_arm_joint_states', '/torso_joint_states', '/head_joint_states', '/command_joint_states', '/visualize_joint_states'] </rosparam>
     <!--param name="source_list" value="['/left_arm_joint_states', '/right_arm_joint_states', '/torso_joint_states', '/head_joint_states']" /-->
   </node>
 

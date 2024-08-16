@@ -70,8 +70,12 @@ Rx1Motor::Rx1Motor(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     for(int i = 0; i < head_servo_ids_.size(); i ++)
     {
         u8 id = head_servo_ids_[i];
-        
-        if (i == 0 || i == 1 || i == 2)
+       
+        if (i == 1)
+        {
+            sts_servo_.WritePosEx(id, 1600, 200, 20);
+        }
+        else if (i == 0 || i == 2)
         {
             sts_servo_.WritePosEx(id, 2048, 200, 20);
         }

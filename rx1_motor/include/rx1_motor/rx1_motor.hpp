@@ -1,7 +1,7 @@
 #ifndef RX1_MOTOR_H
 #define RX1_MOTOR_H
 
-#include "feetech_lib/SMSBL.h"
+#include "feetech_lib/SMS_STS.h"
 #include "feetech_lib/SCSCL.h"
 
 #include <ros/ros.h>
@@ -30,7 +30,7 @@ protected:
 
 private:
     std::string servo_port_;
-    SMSBL sts_servo_;
+    SMS_STS sts_servo_;
     SCSCL scs_servo_;
 
     static constexpr std::array<int, 7> right_arm_servo_ids_ = {11, 12, 13, 14, 15, 16, 17};
