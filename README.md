@@ -1,7 +1,7 @@
 # rx1
 
 ## Introduction
-RX1 Humanoid is an opensource robot project hosted on [www.redrabbitrobotics.cc](www.redrabbitrobotics.cc). This repo is a ROS1 meta package containing basic functioning packages of the RX1 humanoid including the following:  
+RX1 Humanoid is an opensource robot project hosted on [http://www.redrabbitrobotics.cc](http://www.redrabbitrobotics.cc). This repo is a ROS1 meta package containing basic functioning packages of the RX1 humanoid including the following:  
 
 * rx1_description: URDF file  
 * rx1_motor: Feetech servo motor control
