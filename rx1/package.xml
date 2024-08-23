@@ -11,6 +11,7 @@
   <exec_depend>rx1_description</exec_depend>
   <exec_depend>rx1_bringup</exec_depend>
   <exec_depend>rx1_motor</exec_depend>
+  <exec_depend>rx1_motor_lib</exec_depend>
   <exec_depend>rx1_ik</exec_depend>
   <export><metapackage/></export>
 </package>

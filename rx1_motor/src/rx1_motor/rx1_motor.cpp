@@ -5,7 +5,7 @@
 
 namespace rx1_motor
 {
-
+/*
 constexpr std::array<int, 7> Rx1Motor::right_arm_servo_ids_;
 constexpr std::array<int, 7> Rx1Motor::right_arm_servo_dirs_;
 constexpr std::array<int, 7> Rx1Motor::right_arm_servo_gears_;
@@ -24,6 +24,7 @@ constexpr std::array<int, 6> Rx1Motor::right_hand_servo_range_;
 constexpr std::array<int, 6> Rx1Motor::left_hand_servo_ids_;
 constexpr std::array<int, 6> Rx1Motor::left_hand_servo_default_;
 constexpr std::array<int, 6> Rx1Motor::left_hand_servo_range_;
+*/
 
 Rx1Motor::Rx1Motor(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     : nh_(nh),
