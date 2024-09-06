@@ -51,11 +51,11 @@ private:
 
     static constexpr std::array<int, 6> right_hand_servo_ids_ = {31, 32, 33, 34, 35, 36};
     static constexpr std::array<int, 6> right_hand_servo_default_ = {200, 2400, 2300, 420, 600, 440};
-    static constexpr std::array<int, 6> right_hand_servo_range_ = {0, -300, -400, 200, -200, 200};
+    static constexpr std::array<int, 6> right_hand_servo_range_ = {0, -320, -420, 220, -220, 220};
 
     static constexpr std::array<int, 6> left_hand_servo_ids_ = {41, 42, 43, 44, 45, 46};
     static constexpr std::array<int, 6> left_hand_servo_default_ = {512, 1700, 1700, 650, 420, 630};
-    static constexpr std::array<int, 6> left_hand_servo_range_ = {0, 300, 500, -210, 210, -240};
+    static constexpr std::array<int, 6> left_hand_servo_range_ = {0, 350, 550, -260, 260, -300};
 
     ros::Subscriber joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/command_joint_states", 10, &Rx1Motor::jointStateCallback, this);
     ros::Subscriber right_arm_joint_state_sub_ = nh_.subscribe<sensor_msgs::JointState>("/right_arm_joint_states", 100, &Rx1Motor::rightArmJointStateCallback, this);
