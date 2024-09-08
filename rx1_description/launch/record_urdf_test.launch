@@ -4,7 +4,7 @@
 
 <launch>
 
-  <arg name="model" default="$(find rx1_description)/urdf/rx1.urdf.xacro"/>
+  <arg name="model" default="$(find rx1_description)/urdf/rx1.urdf"/>
   <arg name="gui" default="true" />
   <arg name="rvizconfig" default="$(find rx1_description)/rviz/urdf.rviz" />
 

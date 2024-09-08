@@ -1,0 +1,23 @@
+<?xml version="1.0"  encoding="utf-8" ?>
+<robot name="robotic_arm"
+    xmlns:xacro="http://www.ros.org/wiki/xacro"> 
+    <xacro:include filename="$(find rx1_description)/urdf/rx1.urdf" />
+    <xacro:include filename="$(find rx1_description)/urdf/transmission.urdf" />
+
+    <link name="world" />
+    <joint name="world_base_joint" type="fixed">
+      <child link="base_link" />
+      <parent link="world" />
+    </joint>
+
+    <gazebo reference="base_link">
+        <static>true</static>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+            <legacyModeNS>true</legacyModeNS>
+        </plugin>
+    </gazebo>
+</robot>

@@ -1,0 +1,225 @@
+<?xml version="1.0" ?>
+<robot name="rx1">
+
+  <!-- Transmission for base2torso_yaw_joint -->
+  <transmission name="base2torso_yaw_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="base2torso_yaw_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="base2torso_yaw_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for torso_yaw2pitch_joint -->
+  <transmission name="torso_yaw2pitch_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="torso_yaw2pitch_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="torso_yaw2pitch_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for torso_pitch2roll_joint -->
+  <transmission name="torso_pitch2roll_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="torso_pitch2roll_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="torso_pitch2roll_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for head_base2neck_yaw_joint -->
+  <transmission name="head_base2neck_yaw_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="head_base2neck_yaw_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="head_base2neck_yaw_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for neck_yaw2pitch_joint -->
+  <transmission name="neck_yaw2pitch_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="neck_yaw2pitch_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="neck_yaw2pitch_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for neck_pitch2head_depth_cam_mount_joint -->
+  <transmission name="neck_pitch2head_depth_cam_mount_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="neck_pitch2head_depth_cam_mount_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="neck_pitch2head_depth_cam_mount_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for right_shoul_base2shoul_joint -->
+  <transmission name="right_shoul_base2shoul_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="right_shoul_base2shoul_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_shoul_base2shoul_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for right_shoul2shoul_rot_joint -->
+  <transmission name="right_shoul2shoul_rot_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="right_shoul2shoul_rot_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_shoul2shoul_rot_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for right_arm2armrot_joint -->
+  <transmission name="right_arm2armrot_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="right_arm2armrot_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_arm2armrot_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for right_armrot2elbow_joint -->
+  <transmission name="right_armrot2elbow_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="right_armrot2elbow_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_armrot2elbow_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for right_forearm2forearmrot_joint -->
+  <transmission name="right_forearm2forearmrot_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="right_forearm2forearmrot_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_forearm2forearmrot_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for right_forearmrot2forearm_pitch_joint -->
+  <transmission name="right_forearmrot2forearm_pitch_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="right_forearmrot2forearm_pitch_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_forearmrot2forearm_pitch_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for right_forearm_pitch2forearm_roll_joint -->
+  <transmission name="right_forearm_pitch2forearm_roll_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="right_forearm_pitch2forearm_roll_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_forearm_pitch2forearm_roll_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for left_shoul_base2shoul_joint -->
+  <transmission name="left_shoul_base2shoul_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="left_shoul_base2shoul_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_shoul_base2shoul_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for left_shoul2shoul_rot_joint -->
+  <transmission name="left_shoul2shoul_rot_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="left_shoul2shoul_rot_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_shoul2shoul_rot_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for left_arm2armrot_joint -->
+  <transmission name="left_arm2armrot_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="left_arm2armrot_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_arm2armrot_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for left_armrot2elbow_joint -->
+  <transmission name="left_armrot2elbow_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="left_armrot2elbow_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_armrot2elbow_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for left_forearm2forearmrot_joint -->
+  <transmission name="left_forearm2forearmrot_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="left_forearm2forearmrot_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_forearm2forearmrot_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for left_forearmrot2forearm_pitch_joint -->
+  <transmission name="left_forearmrot2forearm_pitch_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="left_forearmrot2forearm_pitch_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_forearmrot2forearm_pitch_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Transmission for left_forearm_pitch2forearm_roll_joint -->
+  <transmission name="left_forearm_pitch2forearm_roll_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="left_forearm_pitch2forearm_roll_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_forearm_pitch2forearm_roll_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+</robot>
+

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <!-- define arguments -->
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="debug" default="false" />
+    <arg name="verbose" default="true" />
+
+    <arg name="robot_x" default="0" />
+    <arg name="robot_y" default="0" />
+    <arg name="robot_z" default="0.01" />
+
+    <!-- startup simulated WORLD -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find rx1_gazebo)/worlds/empty.world"/>
+        <arg name="paused" value="$(arg paused)" />
+        <arg name="use_sim_time" value="$(arg use_sim_time)" />
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="debug" value="$(arg debug)" />
+        <arg name="verbose" value="$(arg verbose)" />
+    </include>
+
+
+    <param name="robot_description"
+        command="$(find xacro)/xacro --inorder '$(find rx1_description)/urdf/rx1.gazebo.urdf' " />
+
+    <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+    <node name="urdf_spawner_rx1" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+        args="-urdf -model rx1 -param robot_description -x  $(arg robot_x) -y $(arg robot_y) -z $(arg robot_z) -R -0.0 -P -0.0 -Y -0.0"/>
+   
+
+    <!-- Load joint controller configurations from YAML file to parameter server -->
+    <rosparam file="$(find rx1_gazebo)/config/rx1_control.yaml" command="load" />
+  
+    <!-- load the controllers -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+      output="screen" ns="/" args="joint_state_controller right_arm_position_controller left_arm_position_controller torso_position_controller head_position_controller" />
+  
+    <!-- convert joint states to TF transforms for rviz, etc -->
+    <node name="state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+      respawn="false" output="screen">
+    </node>
+
+    <node pkg="tf" type="static_transform_publisher" name="world_broadcaster" args = "0 0 0 0 0 0 world base_link 10" />
+    <node pkg="tf" type="static_transform_publisher" name="map_broadcaster" args = "0 0 0 0 0 0 world map 10" />
+
+</launch>

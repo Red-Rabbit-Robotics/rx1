@@ -1,0 +1,147 @@
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+# Arm position controller for the right arm
+right_arm_position_controller:
+  type: effort_controllers/JointTrajectoryController
+  joints:
+    - right_shoul_base2shoul_joint
+    - right_shoul2shoul_rot_joint
+    - right_arm2armrot_joint
+    - right_armrot2elbow_joint
+    - right_forearm2forearmrot_joint
+    - right_forearmrot2forearm_pitch_joint
+    - right_forearm_pitch2forearm_roll_joint
+
+  constraints:
+    goal_time: 0.5
+    stopped_velocity_tolerance: 0.02
+    right_shoul_base2shoul_joint:
+      trajectory: 1.0
+      goal: 0.5
+    right_shoul2shoul_rot_joint:
+      trajectory: 1.0
+      goal: 0.5
+    right_arm2armrot_joint:
+      trajectory: 1.0
+      goal: 0.5
+    right_armrot2elbow_joint:
+      trajectory: 1.0
+      goal: 0.5
+    right_forearm2forearmrot_joint:
+      trajectory: 1.0
+      goal: 0.5
+    right_forearmrot2forearm_pitch_joint:
+      trajectory: 1.0
+      goal: 0.5
+    right_forearm_pitch2forearm_roll_joint:
+      trajectory: 1.0
+      goal: 0.5
+
+  gains:
+    right_shoul_base2shoul_joint: {p: 10, i: 1, d: 0.001}
+    right_shoul2shoul_rot_joint: {p: 10, i: 1, d: 0.1}
+    right_arm2armrot_joint: {p: 10, i: 1, d: 0.001}
+    right_armrot2elbow_joint: {p: 10, i: 1, d: 0.001}
+    right_forearm2forearmrot_joint: {p: 10, i: 1, d: 0.001}
+    right_forearmrot2forearm_pitch_joint: {p: 10, i: 1, d: 0.001}
+    right_forearm_pitch2forearm_roll_joint: {p: 10, i: 1, d: 0.001}
+
+# Arm position controller for the left arm
+left_arm_position_controller:
+  type: effort_controllers/JointTrajectoryController
+  joints:
+    - left_shoul_base2shoul_joint
+    - left_shoul2shoul_rot_joint
+    - left_arm2armrot_joint
+    - left_armrot2elbow_joint
+    - left_forearm2forearmrot_joint
+    - left_forearmrot2forearm_pitch_joint
+    - left_forearm_pitch2forearm_roll_joint
+
+  constraints:
+    goal_time: 0.5
+    stopped_velocity_tolerance: 0.02
+    left_shoul_base2shoul_joint:
+      trajectory: 1.0
+      goal: 0.5
+    left_shoul2shoul_rot_joint:
+      trajectory: 1.0
+      goal: 0.5
+    left_arm2armrot_joint:
+      trajectory: 1.0
+      goal: 0.5
+    left_armrot2elbow_joint:
+      trajectory: 1.0
+      goal: 0.5
+    left_forearm2forearmrot_joint:
+      trajectory: 1.0
+      goal: 0.5
+    left_forearmrot2forearm_pitch_joint:
+      trajectory: 1.0
+      goal: 0.5
+    left_forearm_pitch2forearm_roll_joint:
+      trajectory: 1.0
+      goal: 0.5
+
+  gains:
+    left_shoul_base2shoul_joint: {p: 10, i: 1, d: 0.001}
+    left_shoul2shoul_rot_joint: {p: 10, i: 1, d: 0.1}
+    left_arm2armrot_joint: {p: 10, i: 1, d: 0.001}
+    left_armrot2elbow_joint: {p: 10, i: 1, d: 0.001}
+    left_forearm2forearmrot_joint: {p: 10, i: 1, d: 0.001}
+    left_forearmrot2forearm_pitch_joint: {p: 10, i: 1, d: 0.001}
+    left_forearm_pitch2forearm_roll_joint: {p: 10, i: 1, d: 0.001}
+
+# Torso Position Controller
+torso_position_controller:
+  type: effort_controllers/JointTrajectoryController
+  joints:
+    - base2torso_yaw_joint
+    - torso_yaw2pitch_joint
+    - torso_pitch2roll_joint
+
+  constraints:
+    goal_time: 0.5
+    stopped_velocity_tolerance: 0.02
+    base2torso_yaw_joint:
+      trajectory: 1.0
+      goal: 0.5
+    torso_yaw2pitch_joint:
+      trajectory: 1.0
+      goal: 0.5
+    torso_pitch2roll_joint:
+      trajectory: 1.0
+      goal: 0.5
+
+  gains:
+    base2torso_yaw_joint: {p: 30, i: 1, d: 0.001}
+    torso_yaw2pitch_joint: {p: 30, i: 1, d: 0.001}
+    torso_pitch2roll_joint: {p: 30, i: 1, d: 0.001}
+
+# Head Position Controller
+head_position_controller:
+  type: effort_controllers/JointTrajectoryController
+  joints:
+    - head_base2neck_yaw_joint
+    - neck_yaw2pitch_joint
+    - neck_pitch2head_depth_cam_mount_joint
+
+  constraints:
+    goal_time: 0.5
+    stopped_velocity_tolerance: 0.02
+    head_base2neck_yaw_joint:
+      trajectory: 1.0
+      goal: 0.5
+    neck_yaw2pitch_joint:
+      trajectory: 1.0
+      goal: 0.5
+    neck_pitch2head_depth_cam_mount_joint:
+      trajectory: 1.0
+      goal: 0.5
+
+  gains:
+    head_base2neck_yaw_joint: {p: 10, i: 1, d: 0.001}
+    neck_yaw2pitch_joint: {p: 10, i: 1, d: 0.001}
+    neck_pitch2head_depth_cam_mount_joint: {p: 10, i: 1, d: 0.001}

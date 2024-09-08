@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rx1_gazebo</name>
+  <version>1.2.5</version>
+  <description>
+    rx1 humanoid gazebo simulation
+  </description>
+  <license>MIT</license>
+  <author email="lethiic@gmail.com">lethic</author>
+  <maintainer email="lethiic@gmail.com">lethic</maintainer>
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>urdf</depend>
+  <depend>xacro</depend>
+</package>
+
