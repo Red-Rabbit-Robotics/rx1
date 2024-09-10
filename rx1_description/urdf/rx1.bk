@@ -78,7 +78,7 @@
     <parent link="torso_yaw_link"/>
     <child link="torso_pitch_link"/>
     <limit effort="50.0" lower="-0.785375" upper="0.785375" velocity="15.0"/>
-    <dynamics damping="5" friction="10.0"/>
+    <dynamics damping="0.5" friction="5.0"/>
   </joint>
   <link name="torso_roll_link">
     <inertial>
@@ -105,7 +105,7 @@
     <parent link="torso_pitch_link"/>
     <child link="torso_roll_link"/>
     <limit effort="50.0" lower="-0.785375" upper="0.785375" velocity="15.0"/>
-    <dynamics damping="5" friction="10.0"/>
+    <dynamics damping="0.5" friction="5.0"/>
   </joint>
   <link name="torso_link">
     <inertial>
@@ -180,7 +180,7 @@
     <parent link="head_base_link"/>
     <child link="neck_yaw_link"/>
     <limit effort="50.0" lower="-1.57075" upper="1.57075" velocity="15.0"/>
-    <dynamics damping="0.5" friction="0.1"/>
+    <dynamics damping="0.5" friction="0.0"/>
   </joint>
   <link name="neck_pitch_link">
     <inertial>
@@ -207,7 +207,7 @@
     <parent link="neck_yaw_link"/>
     <child link="neck_pitch_link"/>
     <limit effort="50.0" lower="-1.57075" upper="1.57075" velocity="15.0"/>
-    <dynamics damping="0.5" friction="0.1"/>
+    <dynamics damping="0.5" friction="0.0"/>
   </joint>
   <link name="head_depth_cam_mount_link">
     <inertial>
@@ -648,7 +648,7 @@
     <parent link="left_shoul_base_link"/>
     <child link="left_shoul_link"/>
     <limit effort="50.0" lower="-2.5132000000000003" upper="2.5132000000000003" velocity="15.0"/>
-    <dynamics damping="0.5" friction="0.1"/>
+    <dynamics damping="0.5" friction="0.0"/>
   </joint>
   <link name="left_shoul_rot_link">
     <inertial>
@@ -675,7 +675,7 @@
     <parent link="left_shoul_link"/>
     <child link="left_shoul_rot_link"/>
     <limit effort="50.0" lower="-0.5026400000000001" upper="1.57075" velocity="15.0"/>
-    <dynamics damping="0.5" friction="0.1"/>
+    <dynamics damping="0.5" friction="0.0"/>
   </joint>
   <link name="left_upper_arm_link">
     <inertial>
@@ -726,7 +726,7 @@
     <parent link="left_upper_arm_link"/>
     <child link="left_armrot_link"/>
     <limit effort="50.0" lower="-1.57075" upper="1.57075" velocity="15.0"/>
-    <dynamics damping="0.1" friction="0.1"/>
+    <dynamics damping="0.1" friction="0.0"/>
   </joint>
   <link name="left_elbow_link">
     <inertial>
@@ -753,7 +753,7 @@
     <parent link="left_armrot_link"/>
     <child link="left_elbow_link"/>
     <limit effort="50.0" lower="-2.19905" upper="0.0" velocity="15.0"/>
-    <dynamics damping="0.1" friction="0.1"/>
+    <dynamics damping="0.1" friction="0.0"/>
   </joint>
   <link name="left_forearm_link">
     <inertial>
@@ -804,7 +804,7 @@
     <parent link="left_forearm_link"/>
     <child link="left_forearmrot_link"/>
     <limit effort="50.0" lower="-1.57075" upper="1.57075" velocity="15.0"/>
-    <dynamics damping="0.1" friction="0.1"/>
+    <dynamics damping="0.1" friction="0.0"/>
   </joint>
   <link name="left_forearm_pitch_link">
     <inertial>
@@ -831,7 +831,7 @@
     <parent link="left_forearmrot_link"/>
     <child link="left_forearm_pitch_link"/>
     <limit effort="50.0" lower="-0.785375" upper="0.785375" velocity="15.0"/>
-    <dynamics damping="0.1" friction="0.1"/>
+    <dynamics damping="0.1" friction="0.0"/>
   </joint>
   <link name="left_forearm_roll_link">
     <inertial>
@@ -858,7 +858,7 @@
     <parent link="left_forearm_pitch_link"/>
     <child link="left_forearm_roll_link"/>
     <limit effort="50.0" lower="-0.785375" upper="0.785375" velocity="15.0"/>
-    <dynamics damping="0.1" friction="0.1"/>
+    <dynamics damping="0.1" friction="0.0"/>
   </joint>
   <link name="left_hand_link">
     <inertial>

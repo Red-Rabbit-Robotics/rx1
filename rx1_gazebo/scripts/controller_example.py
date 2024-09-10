@@ -68,13 +68,13 @@ class ArmTorsoHeadController:
 
     def move_right_arm_to_zero(self):
         """Publishes a trajectory to move the right arm joints to position 0."""
-        right_arm_traj = self.create_trajectory(self.right_arm_joints, 0.0)
+        right_arm_traj = self.create_trajectory(self.right_arm_joints, 0)
         rospy.loginfo("Sending trajectory to move right arm joints to position 0.")
         self.right_arm_pub.publish(right_arm_traj)
 
     def move_left_arm_to_zero(self):
         """Publishes a trajectory to move the left arm joints to position 0."""
-        left_arm_traj = self.create_trajectory(self.left_arm_joints, 0.0)
+        left_arm_traj = self.create_trajectory(self.left_arm_joints, 0)
         rospy.loginfo("Sending trajectory to move left arm joints to position 0.")
         self.left_arm_pub.publish(left_arm_traj)
 
@@ -86,7 +86,7 @@ class ArmTorsoHeadController:
 
     def move_head_to_zero(self):
         """Publishes a trajectory to move the head joints to position 0."""
-        head_traj = self.create_trajectory(self.head_joints, 0.0)
+        head_traj = self.create_trajectory(self.head_joints, 0)
         rospy.loginfo("Sending trajectory to move head joints to position 0.")
         self.head_pub.publish(head_traj)
 

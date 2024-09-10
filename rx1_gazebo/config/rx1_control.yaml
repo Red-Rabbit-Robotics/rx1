@@ -40,13 +40,13 @@ right_arm_position_controller:
       goal: 0.5
 
   gains:
-    right_shoul_base2shoul_joint: {p: 10, i: 1, d: 0.001}
-    right_shoul2shoul_rot_joint: {p: 10, i: 1, d: 0.1}
-    right_arm2armrot_joint: {p: 10, i: 1, d: 0.001}
-    right_armrot2elbow_joint: {p: 10, i: 1, d: 0.001}
-    right_forearm2forearmrot_joint: {p: 10, i: 1, d: 0.001}
-    right_forearmrot2forearm_pitch_joint: {p: 10, i: 1, d: 0.001}
-    right_forearm_pitch2forearm_roll_joint: {p: 10, i: 1, d: 0.001}
+    right_shoul_base2shoul_joint: {p: 100, i: 1, d: 0.001}
+    right_shoul2shoul_rot_joint: {p: 100, i: 1, d: 0.1}
+    right_arm2armrot_joint: {p: 100, i: 1, d: 0.001}
+    right_armrot2elbow_joint: {p: 100, i: 1, d: 0.001}
+    right_forearm2forearmrot_joint: {p: 100, i: 1, d: 0.001}
+    right_forearmrot2forearm_pitch_joint: {p: 100, i: 1, d: 0.001}
+    right_forearm_pitch2forearm_roll_joint: {p: 100, i: 1, d: 0.001}
 
 # Arm position controller for the left arm
 left_arm_position_controller:
@@ -86,13 +86,13 @@ left_arm_position_controller:
       goal: 0.5
 
   gains:
-    left_shoul_base2shoul_joint: {p: 10, i: 1, d: 0.001}
-    left_shoul2shoul_rot_joint: {p: 10, i: 1, d: 0.1}
-    left_arm2armrot_joint: {p: 10, i: 1, d: 0.001}
-    left_armrot2elbow_joint: {p: 10, i: 1, d: 0.001}
-    left_forearm2forearmrot_joint: {p: 10, i: 1, d: 0.001}
-    left_forearmrot2forearm_pitch_joint: {p: 10, i: 1, d: 0.001}
-    left_forearm_pitch2forearm_roll_joint: {p: 10, i: 1, d: 0.001}
+    left_shoul_base2shoul_joint: {p: 100, i: 1, d: 0.001}
+    left_shoul2shoul_rot_joint: {p: 100, i: 1, d: 0.1}
+    left_arm2armrot_joint: {p: 100, i: 1, d: 0.001}
+    left_armrot2elbow_joint: {p: 100, i: 1, d: 0.001}
+    left_forearm2forearmrot_joint: {p: 100, i: 1, d: 0.001}
+    left_forearmrot2forearm_pitch_joint: {p: 100, i: 1, d: 0.001}
+    left_forearm_pitch2forearm_roll_joint: {p: 100, i: 1, d: 0.001}
 
 # Torso Position Controller
 torso_position_controller:
@@ -116,9 +116,9 @@ torso_position_controller:
       goal: 0.5
 
   gains:
-    base2torso_yaw_joint: {p: 30, i: 1, d: 0.001}
-    torso_yaw2pitch_joint: {p: 30, i: 1, d: 0.001}
-    torso_pitch2roll_joint: {p: 30, i: 1, d: 0.001}
+    base2torso_yaw_joint: {p: 100, i: 1, d: 0.001}
+    torso_yaw2pitch_joint: {p: 100, i: 1, d: 0.001}
+    torso_pitch2roll_joint: {p: 100, i: 1, d: 0.001}
 
 # Head Position Controller
 head_position_controller:
