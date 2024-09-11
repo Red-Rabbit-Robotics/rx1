@@ -117,8 +117,8 @@ torso_position_controller:
 
   gains:
     base2torso_yaw_joint: {p: 100, i: 1, d: 0.001}
-    torso_yaw2pitch_joint: {p: 100, i: 1, d: 0.001}
-    torso_pitch2roll_joint: {p: 100, i: 1, d: 0.001}
+    torso_yaw2pitch_joint: {p: 200, i: 10, d: 0.001}
+    torso_pitch2roll_joint: {p: 200, i: 10, d: 0.001}
 
 # Head Position Controller
 head_position_controller:

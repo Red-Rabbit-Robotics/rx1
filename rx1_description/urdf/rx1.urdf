@@ -78,7 +78,7 @@
     <parent link="torso_yaw_link"/>
     <child link="torso_pitch_link"/>
     <limit effort="50.0" lower="-0.785375" upper="0.785375" velocity="15.0"/>
-    <dynamics damping="5" friction="10.0"/>
+    <dynamics damping="0.5" friction="0.1"/>
   </joint>
   <link name="torso_roll_link">
     <inertial>
@@ -105,12 +105,12 @@
     <parent link="torso_pitch_link"/>
     <child link="torso_roll_link"/>
     <limit effort="50.0" lower="-0.785375" upper="0.785375" velocity="15.0"/>
-    <dynamics damping="5" friction="10.0"/>
+    <dynamics damping="0.5" friction="0.1"/>
   </joint>
   <link name="torso_link">
     <inertial>
-      <mass value="2.0"/>
-      <inertia ixx="0.01679286352676786" ixy="0.0" ixz="0.0" iyy="0.007437334609190678" iyz="0.0" izz="0.010896862418439308"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.00839643176338393" ixy="0.0" ixz="0.0" iyy="0.003718667304595339" iyz="0.0" izz="0.005448431209219654"/>
     </inertial>
     <visual>
       <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>

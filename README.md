@@ -7,6 +7,7 @@ RX1 Humanoid is an opensource robot project hosted on [http://www.redrabbitrobot
 * rx1_motor: Feetech servo motor control
 * rx1_ik: Inverse Kinematics demo
 * rx1_bringup: Launch everything
+* rx1_gazebo: Gazebo simulation
 
 ## Installation
 Assuming you have already had ROS 1 Noetic or Melodic installed in your Ubuntu computer.
@@ -35,6 +36,16 @@ Go to rx1_motor.launch file and modify the USB port value to the corresponding o
 Then, after doing either 1 or 2 above, type:  
 `roslaunch rx1_motor rx1_motor.launch`   
 You should be able to see the actual robot move based on your commands.
+
+4. Gazebo simulation  
+Install dependencies:  
+`pip install tk`  
+Run simulation:  
+`roslaunch rx1_gazebo rx1_gazebo.launch`  
+`roscd rx1_gazebo/scripts/`  
+`python3 controller_gui_example.py`  
+You should be able click and drag the sliders and command joints angles through the GUI.  
+![image](https://github.com/Red-Rabbit-Robotics/rx1/blob/master/media/gazebo.gif)  
 
 ## Extra notes
 

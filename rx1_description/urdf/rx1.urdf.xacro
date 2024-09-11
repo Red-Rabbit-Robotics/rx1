@@ -96,7 +96,7 @@
     <joint name="torso_yaw2pitch_joint" type="revolute">
         <axis xyz="0 1 0" />
         <limit effort="${motor_torque}" lower="${-0.25*pi}" upper="${0.25*pi}" velocity="${motor_vec}"/>
-        <dynamics damping="5" friction="10.0" />
+        <dynamics damping="0.5" friction="0.1" />
         <origin xyz="0 0 0.15" rpy="0 0 0" />
         <parent link="torso_yaw_link" />
         <child link="torso_pitch_link" />
@@ -124,7 +124,7 @@
     <joint name="torso_pitch2roll_joint" type="revolute">
         <axis xyz="1 0 0" />
         <limit effort="${motor_torque}" lower="${-0.25*pi}" upper="${0.25*pi}" velocity="${motor_vec}"/>
-        <dynamics damping="5" friction="10" />
+        <dynamics damping="0.5" friction="0.1" />
         <origin xyz="0 0 0" rpy="0 0 0" />
         <parent link="torso_pitch_link" />
         <child link="torso_roll_link" />
@@ -132,7 +132,7 @@
     
     <link name="torso_link">
         <inertial>
-            <mass value="2" />
+            <mass value="1" />
             <inertia ixx="4.16666667e-06" ixy="0.0" ixz="0.0" iyy="6.6666666667e-6" iyz="0.0" izz="04.16666667e-06" />
         </inertial>
         <visual>
