@@ -50,5 +50,5 @@ You should be able click and drag the sliders and command joints angles through 
 ## Extra notes
 
 1. Note that some of the mesh files don't match exactly the latest CAD file of the RX1 Humanoid robot due to development overtime. The overall shape stays the same though.
-2. There is no Gazebo Simulation at the moment. And the inertia values in the urdf are placeholders.
+2. The inertia values in the `rx1.urdf.xacro` file are placeholders, while the `rx1.urdf` has the proper inertia values and it's created by using the `rx1_description/scripts/calc_inertia.py` script. (**acknowledgement**: this script is modified from [https://github.com/gstavrinos/calc-inertia/blob/master/calc_inertia_for_urdf.py](https://github.com/gstavrinos/calc-inertia/blob/master/calc_inertia_for_urdf.py))
 3. To launch everything by `roslaunch rx1_bringup bringup.launch` , you need to have the depth camera's ROS package [OrbbecSDK_ROS1](https://github.com/orbbec/OrbbecSDK_ROS1) installed as well.
