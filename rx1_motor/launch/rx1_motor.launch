@@ -2,6 +2,6 @@
 
 <launch>
     <node name="rx1_motor_node" pkg="rx1_motor" type="rx1_motor_node" output="screen">
-        <param name="servo_port" type="string" value="/dev/ttyUSB-arduino4.3" />
+        <param name="servo_port" type="string" value="/dev/ttyUSB-arduino5.3" />
     </node>
 </launch>

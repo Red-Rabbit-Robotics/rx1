@@ -30,16 +30,16 @@ Rx1Motor::Rx1Motor(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     : nh_(nh),
       priv_nh_(priv_nh)
 {
-    nh_.param<std::string>("servo_port", servo_port_, "/dev/ttyUSB-arduino4.3");
+    nh_.param<std::string>("rx1_motor_node/servo_port", servo_port_, "/dev/ttyUSB-arduino4.3");
 
     if (!sts_servo_.begin(1000000, servo_port_.c_str()))
     {
-        ROS_ERROR("[RX1_MOTOR] Failed initialize sts servo!");
+        ROS_ERROR("[RX1_MOTOR] Failed initialize sts servo port %s!", servo_port_.c_str());
     }
 
     if (!scs_servo_.begin(1000000, servo_port_.c_str()))
     {
-        ROS_ERROR("[RX1_MOTOR] Failed initialize scs servo!");
+        ROS_ERROR("[RX1_MOTOR] Failed initialize scs servo port %s!", servo_port_.c_str());
     }
     
     for(int i = 0; i < right_arm_servo_ids_.size(); i ++)
@@ -63,7 +63,8 @@ Rx1Motor::Rx1Motor(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
        
         if (i == 1)
         {
-            sts_servo_.WritePosEx(id, 1600, 200, 20);
+            //sts_servo_.WritePosEx(id, 1600, 200, 20);
+            sts_servo_.WritePosEx(id, 2048, 200, 20);
         }
         else if (i == 0 || i == 2)
         {
@@ -263,7 +264,7 @@ void Rx1Motor::headJointStateCallback(const sensor_msgs::JointState::ConstPtr& m
 
 void Rx1Motor::rightGripperCallback(const std_msgs::Float32ConstPtr& msg)
 {
-    ros::Time command_start_time = ros::Time::now(); 
+    //ros::Time command_start_time = ros::Time::now(); 
 
     double grip_ratio = msg->data;
 
@@ -299,12 +300,13 @@ void Rx1Motor::rightGripperCallback(const std_msgs::Float32ConstPtr& msg)
     // Thumb yaw
     scs_servo_.WritePos(right_hand_servo_ids_[0], 200, 0, 400); // id, pos, time, speed
    
-    double time_spend = (ros::Time::now() - command_start_time).toSec();
-    ROS_INFO("[RX1_MOTOR] right hand command time is %f sec", time_spend);
+    //double time_spend = (ros::Time::now() - command_start_time).toSec();
+    //ROS_INFO("[RX1_MOTOR] right hand command time is %f sec", time_spend);
 }
 
 void Rx1Motor::leftGripperCallback(const std_msgs::Float32::ConstPtr& msg)
 {
+    //ros::Time command_start_time = ros::Time::now(); 
     double grip_ratio = msg->data;
 
     int length = left_hand_servo_ids_.size();
@@ -337,6 +339,8 @@ void Rx1Motor::leftGripperCallback(const std_msgs::Float32::ConstPtr& msg)
 
     // Thumb yaw
     scs_servo_.WritePos(left_hand_servo_ids_[0], 512, 0, 400); // id, pos, time, speed
+    //double time_spend = (ros::Time::now() - command_start_time).toSec();
+    //ROS_INFO("[RX1_MOTOR] left hand command time is %f sec", time_spend);
 
 }
 
