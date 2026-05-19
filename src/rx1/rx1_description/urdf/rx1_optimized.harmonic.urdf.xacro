@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+
+<robot name="rx1" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:arg name="controllers_file" default="" />
+  <xacro:arg name="rgbd_topic_root" default="/rx1/rgbd_camera" />
+
+  <xacro:property name="controllers_file" value="$(arg controllers_file)" />
+  <xacro:property name="rgbd_topic_root" value="$(arg rgbd_topic_root)" />
+
+  <xacro:include filename="$(find rx1_description)/urdf/rx1_optimized.urdf.xacro" />
+
+  <link name="world" />
+  <joint name="world_base_joint" type="fixed">
+    <origin xyz="0 0 0.2" rpy="0 0 0" />
+    <parent link="world" />
+    <child link="base_link" />
+  </joint>
+
+  <ros2_control name="GazeboSimSystem" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+
+    <joint name="base2torso_yaw_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="torso_yaw2pitch_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="torso_pitch2roll_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+
+    <joint name="head_base2neck_yaw_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="neck_yaw2pitch_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="neck_pitch2head_depth_cam_mount_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="head_depth_cam_mount2right_ear_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="head_depth_cam_mount2left_ear_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+
+    <joint name="right_shoul_base2shoul_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="right_shoul2shoul_rot_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="right_arm2armrot_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="right_armrot2elbow_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="right_forearm2forearmrot_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="right_forearmrot2forearm_pitch_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="right_forearm_pitch2forearm_roll_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+
+    <joint name="left_shoul_base2shoul_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="left_shoul2shoul_rot_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="left_arm2armrot_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="left_armrot2elbow_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="left_forearm2forearmrot_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="left_forearmrot2forearm_pitch_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+    <joint name="left_forearm_pitch2forearm_roll_joint">
+      <command_interface name="position" />
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"><param name="initial_value">0.0</param></state_interface>
+    </joint>
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>${controllers_file}</parameters>
+      <hold_joints>true</hold_joints>
+      <position_proportional_gain>0.5</position_proportional_gain>
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="camera_link">
+    <sensor name="head_rgbd_camera" type="rgbd_camera">
+      <always_on>true</always_on>
+      <update_rate>15</update_rate>
+      <visualize>true</visualize>
+      <topic>${rgbd_topic_root}</topic>
+      <camera>
+        <horizontal_fov>1.0471975512</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>5.0</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+</robot>

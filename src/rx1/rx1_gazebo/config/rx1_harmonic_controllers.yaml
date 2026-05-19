@@ -1,0 +1,42 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 200
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    rx1_joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+rx1_joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - base2torso_yaw_joint
+      - torso_yaw2pitch_joint
+      - torso_pitch2roll_joint
+      - head_base2neck_yaw_joint
+      - neck_yaw2pitch_joint
+      - neck_pitch2head_depth_cam_mount_joint
+      - right_shoul_base2shoul_joint
+      - right_shoul2shoul_rot_joint
+      - right_arm2armrot_joint
+      - right_armrot2elbow_joint
+      - right_forearm2forearmrot_joint
+      - right_forearmrot2forearm_pitch_joint
+      - right_forearm_pitch2forearm_roll_joint
+      - left_shoul_base2shoul_joint
+      - left_shoul2shoul_rot_joint
+      - left_arm2armrot_joint
+      - left_armrot2elbow_joint
+      - left_forearm2forearmrot_joint
+      - left_forearmrot2forearm_pitch_joint
+      - left_forearm_pitch2forearm_roll_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_partial_joints_goal: true
+    constraints:
+      goal_time: 1.0
+      stopped_velocity_tolerance: 0.02

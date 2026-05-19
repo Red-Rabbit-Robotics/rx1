@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>feetech_lib</name>
+  <version>0.0.1</version>
+  <description>Feetech servo driver package</description>
+  <maintainer email="lethiic@gmail.com">lethic</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

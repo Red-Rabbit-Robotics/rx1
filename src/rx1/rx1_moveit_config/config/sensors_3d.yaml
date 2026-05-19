@@ -1,0 +1,18 @@
+octomap_frame: world
+octomap_resolution: 0.05
+max_range: 4.0
+
+sensors:
+  - head_rgbd_camera
+
+head_rgbd_camera:
+  sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
+  image_topic: /rx1/rgbd_camera/depth_image
+  queue_size: 5
+  near_clipping_plane_distance: 0.15
+  far_clipping_plane_distance: 4.0
+  shadow_threshold: 0.2
+  padding_scale: 1.0
+  padding_offset: 0.03
+  max_update_rate: 10.0
+  filtered_cloud_topic: /rx1/rgbd_camera/filtered_points

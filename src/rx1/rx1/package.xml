@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>rx1</name>
+  <version>0.0.0</version>
+  <description>The rx1 robot package</description>
+  <maintainer email="lethiic@gmail.com">lethic</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>rx1_description</exec_depend>
+  <exec_depend>rx1_bringup</exec_depend>
+  <exec_depend>rx1_gazebo</exec_depend>
+  <exec_depend>rx1_motor</exec_depend>
+  <exec_depend>rx1_motor_lib</exec_depend>
+  <exec_depend>rx1_ik</exec_depend>
+  <exec_depend>rx1_moveit_config</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
