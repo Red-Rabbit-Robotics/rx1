@@ -1,0 +1,101 @@
+joint_limits:
+  base2torso_yaw_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  torso_yaw2pitch_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  torso_pitch2roll_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  right_shoul_base2shoul_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  right_shoul2shoul_rot_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  right_arm2armrot_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  right_armrot2elbow_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  right_forearm2forearmrot_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  right_forearmrot2forearm_pitch_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  right_forearm_pitch2forearm_roll_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  left_shoul_base2shoul_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  left_shoul2shoul_rot_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  left_arm2armrot_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  left_armrot2elbow_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  left_forearm2forearmrot_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  left_forearmrot2forearm_pitch_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  left_forearm_pitch2forearm_roll_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  head_base2neck_yaw_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  neck_yaw2pitch_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0
+  neck_pitch2head_depth_cam_mount_joint:
+    has_velocity_limits: true
+    max_velocity: 15.0
+    has_acceleration_limits: true
+    max_acceleration: 15.0

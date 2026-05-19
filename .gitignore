@@ -1,0 +1,10 @@
+build/
+install/
+log/
+
+**/__pycache__/
+*.pyc
+*.pyo
+
+.DS_Store
+.repo-backups/

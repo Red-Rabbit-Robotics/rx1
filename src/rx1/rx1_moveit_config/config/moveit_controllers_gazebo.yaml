@@ -1,0 +1,37 @@
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+
+trajectory_execution:
+  allowed_execution_duration_scaling: 1.2
+  allowed_goal_duration_margin: 0.5
+  allowed_start_tolerance: 0.0
+  execution_duration_monitoring: false
+
+moveit_simple_controller_manager:
+  controller_names:
+    - rx1_joint_trajectory_controller
+
+  rx1_joint_trajectory_controller:
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+      - base2torso_yaw_joint
+      - torso_yaw2pitch_joint
+      - torso_pitch2roll_joint
+      - head_base2neck_yaw_joint
+      - neck_yaw2pitch_joint
+      - neck_pitch2head_depth_cam_mount_joint
+      - right_shoul_base2shoul_joint
+      - right_shoul2shoul_rot_joint
+      - right_arm2armrot_joint
+      - right_armrot2elbow_joint
+      - right_forearm2forearmrot_joint
+      - right_forearmrot2forearm_pitch_joint
+      - right_forearm_pitch2forearm_roll_joint
+      - left_shoul_base2shoul_joint
+      - left_shoul2shoul_rot_joint
+      - left_arm2armrot_joint
+      - left_armrot2elbow_joint
+      - left_forearm2forearmrot_joint
+      - left_forearmrot2forearm_pitch_joint
+      - left_forearm_pitch2forearm_roll_joint
